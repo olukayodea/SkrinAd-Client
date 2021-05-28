@@ -1,0 +1,49 @@
+<div class="hold-transition login-page lockscreen">
+    <!-- Automatic element centering -->
+    <div class="lockscreen-wrapper">
+        <div class="lockscreen-logo">
+          <a href=""><b>Skrin</b>Ad</a>
+        </div>
+        <!-- User name -->
+        <div [hidden]="!errorMsg" [innerHTML]='error' class="alert alert-danger"></div>
+        <div class="lockscreen-name">{{userData.name}}</div>
+      
+        <!-- START LOCK SCREEN ITEM -->
+        <div class="lockscreen-item">
+          <!-- lockscreen image -->
+          <div class="lockscreen-image">
+            <img src="https://ui-avatars.com/api/?name={{userData.name}}&background=0D8ABC&color=fff" alt="{{userData.name}}">
+          </div>
+          <!-- /.lockscreen-image -->
+      
+          <!-- lockscreen credentials (contains the form) -->
+  
+          <form [formGroup]="loginForm" class="lockscreen-credentials">
+            <div class="input-group">
+              <input type="password" formControlName="password" id="password" required [ngClass]="(password.invalid && (password.dirty || password.touched)) ? 'form-control is-invalid' : (password.valid)? 'form-control is-valid':'form-control'" placeholder="password">
+      
+              <div class="input-group-append">
+                <button type="button" class="btn" [hidden]="password.invalid && (password.dirty || password.touched)" (click)="onSubmit()">
+                  <i [hidden]="processing" class="fas fa-arrow-right text-muted"></i>
+                  <i [hidden]="!processing" class="fas fa-spinner fa-spin text-muted"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+          <!-- /.lockscreen credentials -->
+      
+        </div>
+        <!-- /.lockscreen-item -->
+        <div class="help-block text-center">
+          Enter your password to retrieve your session
+        </div>
+        <div class="text-center">
+          <a [routerLink]="['/logout/clear']">Or sign in as a different user</a>
+        </div>
+        <div class="lockscreen-footer text-center">
+          Copyright &copy; {{copyright()}} <strong><a href="https://SkrinAd.me">SkrinAd.</a></strong><br>
+          All rights reserved.
+        </div>
+    </div>
+    <!-- /.center -->
+  </div>

@@ -1,0 +1,154 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="./" class="brand-link">
+        <img src="assets/images/logo.png" alt="SkrinAd Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">Agency</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- SidebarSearch Form -->
+        <div class="form-inline mt-2">
+        <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+            <button class="btn btn-sidebar">
+                <i class="fas fa-search fa-fw"></i>
+            </button>
+            </div>
+        </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                    with font-awesome or any other icon font library -->
+                <li [class]="page == 'dashboard'? 'menu-open active' : ''" class="nav-item">
+                    <a [routerLink]="['/']" [class]="page == 'dashboard'? 'nav-link active' : 'nav-link'">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li [class]="page == 'adverts'? 'menu-open active' : ''" class="nav-item">
+                    <a [routerLink]="" [class]="page == 'adverts'? 'nav-link active' : 'nav-link'">
+                        <i class="fas fa-ad nav-icon"></i>
+                        <p>
+                            Adverts
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a [routerLink]="['/adverts']" [class]="page == 'adverts' && subPage == 'manage'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Manage</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['/adverts/campaign']" [class]="page == 'adverts' && subPage == 'campaign'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Running Campaign</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li [class]="page == 'surveys'? 'menu-open active' : ''" class="nav-item">
+                    <a [routerLink]="" [class]="page == 'surveys'? 'nav-link active' : 'nav-link'">
+                        <i class="fas fa-poll-h nav-icon"></i>
+                        <p>
+                            Surverys
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a [routerLink]="['/surveys']" [class]="page == 'surveys' && subPage == 'manage'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Manage</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['/surveys/campaign']" [class]="page == 'surveys' && subPage == 'campaign'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Running Campaign</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li [class]="page == 'wallet'? 'menu-open active' : ''" class="nav-item">
+                    <a [routerLink]="['/wallet']" [class]="page == 'wallet'? 'nav-link active' : 'nav-link'">
+                        <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                        <p>Wallet</p>
+                    </a>
+                </li>
+                <li [class]="page == 'reports'? 'menu-open active' : ''" class="nav-item">
+                    <a [routerLink]="" [class]="page == 'reports'? 'nav-link active' : 'nav-link'">
+                        <i class="fas fa-money-check-alt nav-icon"></i>
+                        <p>
+                            Reports
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a [routerLink]="['/reports/transaction']" [class]="page == 'reports' && subPage == 'transaction'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Transactions</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li [class]="page == 'settings'? 'menu-open active' : ''" class="nav-item">
+                    <a [routerLink]="" [class]="page == 'settings'? 'nav-link active' : 'nav-link'">
+                        <i class="fas fa-cogs nav-icon"></i>
+                        <p>
+                            Settings
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a [routerLink]="['/settings/administrator']" [class]="page == 'settings' && subPage == 'administrator'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Administrators</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['/settings/administrator/right']" [class]="page == 'settings' && subPage == 'right'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Administrator Right</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['/settings/categories']" [class]="page == 'settings' && subPage == 'categories'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Categories</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['/settings/countries']" [class]="page == 'settings' && subPage == 'countries'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Countries</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['/settings/currency']" [class]="page == 'settings' && subPage == 'currency'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Currency</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a [routerLink]="['/settings/system']" [class]="page == 'settings' && subPage == 'system'? 'nav-link active' : 'nav-link'">
+                                <i class="fas fa-minus nav-icon"></i>
+                                <p>Options</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

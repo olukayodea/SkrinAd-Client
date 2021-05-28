@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseUrl: 'http://127.0.0.1/skrinad/api/2.2/',
+  assetsUrl: "http://localhost:4200/assets/",
+  localKey: 'lQiqiv58A7lOQlVc',
+  paymentLocaton: ["ng"],
+  paymentKey: "FLWPUBK-9d1e335b51f36fcbc844287253480d60-X"
 };
 
 /*

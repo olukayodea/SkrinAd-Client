@@ -1,0 +1,56 @@
+<div class="hold-transition login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="./"><b>Skrin</b>Ad</a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Sign in to start your session</p>
+    
+          <form [formGroup]="loginForm">
+            <div [hidden]="!successMsg" [innerHTML]='success' class="alert alert-success"></div>
+            <div [hidden]="!errorMsg" [innerHTML]='error' class="alert alert-danger"></div>
+            <div class="input-group mb-3">
+              <input type="text" formControlName="username" id="username" required [ngClass]="(username.invalid && (username.dirty || username.touched)) ? 'form-control is-invalid' : (username.valid)? 'form-control is-valid':'form-control'" autofocus placeholder="Username">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+                </div>
+              </div>
+              <div *ngIf="username.invalid && (username.dirty || username.touched)" class="invalid-feedback">
+                  <div *ngIf="username.errors.required">Username is required.</div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="password" formControlName="password" id="password" required [ngClass]="(password.invalid && (password.dirty || password.touched)) ? 'form-control is-invalid' : (password.valid)? 'form-control is-valid':'form-control'" placeholder="Password">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+              <div *ngIf="password.invalid && (password.dirty || password.touched)" class="invalid-feedback">
+                  <div *ngIf="password.errors.required">Password is required.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+              </div>
+              <!-- /.col -->
+              <div class="col-4">
+                <button type="submit" [disabled]="!loginForm.valid || loginForm.pending || processing" (click)="onSubmit()" class="btn btn-primary btn-block">{{buttonText}}</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+          <!-- /.social-auth-links -->
+    
+          <p class="mb-1">
+            <a href="forgot-password.html">I forgot my password</a>
+          </p>
+        </div>
+        <!-- /.login-card-body -->
+      </div>
+    </div>
+    <!-- /.login-box -->
+  </div>

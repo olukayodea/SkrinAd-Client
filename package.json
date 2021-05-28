@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deployDev": "ng build --configuration dev && aws s3 sync dist/SkrinAd-Client s3://test.agency.skrinad.me --delete",
+    "deploy": "ng build --prod && aws s3 sync dist/SkrinAd-Client s3://agency.skrinad.me --delete"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +21,14 @@
     "@angular/platform-browser": "~11.2.9",
     "@angular/platform-browser-dynamic": "~11.2.9",
     "@angular/router": "~11.2.9",
+    "@types/crypto-js": "^4.0.1",
+    "bootstrap": "^4.6.0",
+    "chart.js": "^2.9.4",
+    "crypto-js": "^4.0.0",
+    "flag-icon-css": "^3.5.0",
+    "flutterwave-angular-v3": "^1.2.1",
+    "jquery": "^3.6.0",
+    "ngx-toastr": "^13.2.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
