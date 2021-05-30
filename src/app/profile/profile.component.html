@@ -1,0 +1,199 @@
+<div class="hold-transition sidebar-mini layout-navbar-fixed layout-footer-fixed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <app-header></app-header>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <app-sidebar [page]="'dashboard'"></app-sidebar>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Settings</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">{{userData.name}}</li>
+                        </ol>
+                    </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="sticky-top mb-3">
+                                <!-- Profile Image -->
+                                <div class="card card-primary card-outline">
+                                    <div class="card-body box-profile">
+                                        <div class="text-center">
+                                            <img class="profile-user-img img-fluid img-circle" src="https://ui-avatars.com/api/?name={{userData.companyName}}&background=0D8ABC&color=fff" alt="{{userData.companyName}}">
+                                        </div>
+                                        <h3 class="profile-username text-center">{{userData.companyName}}</h3>
+                                        <p class="text-muted text-center">{{userData.username}}</p>
+
+                                        <ul class="list-group list-group-unbordered mb-3">
+                                            <li class="list-group-item">
+                                                <b>Wallet Balance</b> <a class="float-right"><span [innerHTML]="userData.wallet.currency.symbol"></span>{{userData.wallet.amount}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Contact</b> <a class="float-right">{{userData.name}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>E-Mail</b> <a class="float-right">{{userData.contactEmail}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Phone</b> <a class="float-right">{{userData.contactPhone}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Status</b> <a class="float-right">
+                                                    <span [class]="
+                                                    userData.accountStatus.newAccount === true ? 'badge bg-info' : 
+                                                    userData.accountStatus.inactiveAccount === true ? 'badge bg-warning' : 
+                                                    userData.accountStatus.activeAccount === true ? 'badge bg-success' : 
+                                                        'badge bg-danger'" [innerHTML]="
+                                                        userData.accountStatus.newAccount === true ? 'New' : 
+                                                        userData.accountStatus.inactiveAccount === true ? 'Pending' : 
+                                                        userData.accountStatus.activeAccount === true ? 'Active' : 
+                                                        'Password Change'">
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Network</b> <a class="float-right">
+                                                    <span class="badge bg-primary">{{userData.country.title}}</span>&nbsp;
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Created</b> <a class="float-right">{{userData.created}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Last Modified</b> <a class="float-right">{{userData.lastModified}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                        <!-- /.col -->
+
+                        <div class="col-md-4">
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-edit"></i>
+                                        Edit Profile
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <!-- form start -->
+                                    <form [formGroup]="dataForm">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="client_name">Agency Name</label>
+                                                <input type="text" required [ngClass]="(client_name.invalid && (client_name.dirty || client_name.touched)) ? 'form-control is-invalid' : (client_name.valid)? 'form-control is-valid':'form-control'" formControlName="client_name" id="client_name" placeholder="Full Names">
+                                                <div *ngIf="client_name.invalid && (client_name.dirty || client_name.touched)" class="invalid-feedback">
+                                                    <div *ngIf="client_name.errors.required">Agency is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Contact Person</label>
+                                                <input type="text" required [ngClass]="(name.invalid && (name.dirty || name.touched)) ? 'form-control is-invalid' : (name.valid)? 'form-control is-valid':'form-control'" formControlName="name" id="name" placeholder="Full Names">
+                                                <div *ngIf="name.invalid && (name.dirty || name.touched)" class="invalid-feedback">
+                                                    <div *ngIf="name.errors.required">Contact name is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">E-Mail</label>
+                                                <input type="email" required [ngClass]="(email.invalid && (email.dirty || email.touched)) ? 'form-control is-invalid' : (email.valid)? 'form-control is-valid':'form-control'" formControlName="email" id="email" placeholder="E-Mail">
+                                                <div *ngIf="email.invalid && (email.dirty || email.touched)" class="invalid-feedback">
+                                                    <div *ngIf="email.errors.required">E-Mail is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phone">Phone Number</label>
+                                                <input type="phone" required [ngClass]="(phone.invalid && (phone.dirty || phone.touched)) ? 'form-control is-invalid' : (phone.valid)? 'form-control is-valid':'form-control'" formControlName="phone" id="phone" placeholder="Phone Number">
+                                                <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="invalid-feedback">
+                                                    <div *ngIf="phone.errors.required">Phone Number is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+
+                                        <button type="submit" [disabled]="!dataForm.valid || dataForm.pending || processing" (click)="updateProfile()" class="btn btn-primary btn-block">{{buttonText}}</button>&nbsp;
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-edit"></i>
+                                        Change Password
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <!-- form start -->
+                                    <form [formGroup]="passwordForm">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="oldPassword">Old Password</label>
+                                                <input type="password" required [ngClass]="(oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)) ? 'form-control is-invalid' : (oldPassword.valid)? 'form-control is-valid':'form-control'" formControlName="oldPassword" id="oldPassword" placeholder="Old Password">
+                                                <div *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)" class="invalid-feedback">
+                                                    <div *ngIf="oldPassword.errors.required">Old Password is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="newPassword">New Password</label>
+                                                <input type="password" required [ngClass]="(newPassword.invalid && (newPassword.dirty || newPassword.touched)) ? 'form-control is-invalid' : (newPassword.valid)? 'form-control is-valid':'form-control'" formControlName="newPassword" id="newPassword" placeholder="New Password">
+                                                <div *ngIf="newPassword.invalid && (newPassword.dirty || newPassword.touched)" class="invalid-feedback">
+                                                    <div *ngIf="newPassword.errors.required">New Password is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="confirmPassword">Confirm New Password</label>
+                                                <input type="password" required [ngClass]="(confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) || ((newPassword.value != confirmPassword.value) && confirmPassword.valid)) ? 'form-control is-invalid' : (confirmPassword.valid)? 'form-control is-valid':'form-control'" formControlName="confirmPassword" id="confirmPassword" placeholder="Confirm Password">
+                                                <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" class="invalid-feedback">
+                                                    <div *ngIf="confirmPassword.errors.required">Confirm New Password</div>
+                                                </div>
+                                                <div *ngIf="(confirmPassword.valid && (newPassword.value != confirmPassword.value)) && (confirmPassword.dirty || confirmPassword.touched)" class="invalid-feedback">
+                                                    Password does not match
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+
+                                        <button type="submit" [disabled]="!passwordForm.valid || passwordForm.pending || newPassword.value != confirmPassword.value || processing" (click)="updatePassword()" class="btn btn-primary btn-block">{{passwordButtonText}}</button>&nbsp;
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+            <!-- /.content-wrapper -->
+
+        </div>
+        <!-- /.content-wrapper -->
+        <app-footer></app-footer>
+    </div>
+    <!-- ./wrapper -->
+</div>
