@@ -99,53 +99,6 @@
                         </li>
                     </ul>
                 </li>
-                <li [class]="page == 'settings'? 'menu-open active' : ''" class="nav-item">
-                    <a [routerLink]="" [class]="page == 'settings'? 'nav-link active' : 'nav-link'">
-                        <i class="fas fa-cogs nav-icon"></i>
-                        <p>
-                            Settings
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a [routerLink]="['/settings/administrator']" [class]="page == 'settings' && subPage == 'administrator'? 'nav-link active' : 'nav-link'">
-                                <i class="fas fa-minus nav-icon"></i>
-                                <p>Administrators</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a [routerLink]="['/settings/administrator/right']" [class]="page == 'settings' && subPage == 'right'? 'nav-link active' : 'nav-link'">
-                                <i class="fas fa-minus nav-icon"></i>
-                                <p>Administrator Right</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a [routerLink]="['/settings/categories']" [class]="page == 'settings' && subPage == 'categories'? 'nav-link active' : 'nav-link'">
-                                <i class="fas fa-minus nav-icon"></i>
-                                <p>Categories</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a [routerLink]="['/settings/countries']" [class]="page == 'settings' && subPage == 'countries'? 'nav-link active' : 'nav-link'">
-                                <i class="fas fa-minus nav-icon"></i>
-                                <p>Countries</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a [routerLink]="['/settings/currency']" [class]="page == 'settings' && subPage == 'currency'? 'nav-link active' : 'nav-link'">
-                                <i class="fas fa-minus nav-icon"></i>
-                                <p>Currency</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a [routerLink]="['/settings/system']" [class]="page == 'settings' && subPage == 'system'? 'nav-link active' : 'nav-link'">
-                                <i class="fas fa-minus nav-icon"></i>
-                                <p>Options</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
