@@ -20,12 +20,16 @@ export class LoginComponent implements OnInit {
   queryParams: Params;
   
   buttonText: string = "Login";
+  passwordButtonText: string = "Change";
   processing: boolean = false;
 
   success: string;
   successMsg: boolean;
   error: string;
   errorMsg: boolean;
+
+  changePassword: boolean = false;
+  tempToken: string
 
   loginForm = this.fb.group({
     username: ['', Validators.required],
@@ -34,6 +38,14 @@ export class LoginComponent implements OnInit {
   
   get username() { return this.loginForm.get('username'); }
   get password() { return this.loginForm.get('password'); }
+
+  passwordForm = this.fb.group({
+    newPassword: ["", Validators.required],
+    confirmPassword: ["", Validators.required],
+  }, {});
+  
+  get newPassword() { return this.passwordForm.get('newPassword'); }
+  get confirmPassword() { return this.passwordForm.get('confirmPassword'); }
 
   constructor(
     private router: Router,
@@ -93,6 +105,65 @@ export class LoginComponent implements OnInit {
       user => {
         let randKey = this.checkService.getRandomString(32);
         if (user.success == true) {
+          if (user.data.accountStatus.newAccount || user.data.accountStatus.passwordChange) {
+            this.changePassword = true;
+            this.tempToken = user.token;
+            this.errorMsg = false;
+            this.successMsg = true;
+            this.success = "You will need to set a new password to continue";
+            this.processing = false;
+          } else {
+            // Save user to Local storage
+
+            var currentTime = Math.floor((Date.now() / 1000) + (60 * 10));
+            
+            var keydata = {
+              key: randKey,
+              expire: currentTime.toString()
+            }
+
+            localStorage.setItem('key', btoa( JSON.stringify(keydata)) );
+            localStorage.setItem('userData', this.EncrDecr.set(environment.localKey+randKey, JSON.stringify(user.data)));
+
+            this.redirect = localStorage.getItem('route');
+
+            // if (this.redirect !== undefined) {     
+            //   this.redirect = user.data.mainPage
+            // }
+            
+            window.location.href = decodeURIComponent(this.redirect);
+            // this.router.navigate(['/'+decodeURIComponent(this.redirect)]);
+          }
+        } else {
+          this.errorMsg = true;
+          this.error = user.error.message;
+          this.buttonText = "Login";
+          this.processing = false;
+        }
+      }
+    );
+  }
+
+  onSubmitPassword() {
+    if(this.passwordForm.invalid) {
+      return;
+    }
+    var data: object = {
+      password: this.passwordForm.value.newPassword,
+    };
+
+    this.setPassword(data);
+  }
+  
+  setPassword( password: object) {
+    this.passwordButtonText = "Logging In";
+    this.processing = true;
+
+    this.apiService.setPassword(password, this.tempToken).subscribe(
+      user => {
+        let randKey = this.checkService.getRandomString(32);
+        if (user.success == true) {
+
           // Save user to Local storage
 
           var currentTime = Math.floor((Date.now() / 1000) + (60 * 10));
@@ -116,7 +187,7 @@ export class LoginComponent implements OnInit {
         } else {
           this.errorMsg = true;
           this.error = user.error.message;
-          this.buttonText = "Login";
+          this.passwordButtonText = "Change";
           this.processing = false;
         }
       }

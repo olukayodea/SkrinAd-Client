@@ -8,9 +8,9 @@
         <div class="card-body login-card-body">
           <p class="login-box-msg">Sign in to start your session</p>
     
-          <form [formGroup]="loginForm">
-            <div [hidden]="!successMsg" [innerHTML]='success' class="alert alert-success"></div>
-            <div [hidden]="!errorMsg" [innerHTML]='error' class="alert alert-danger"></div>
+          <div [hidden]="!successMsg" [innerHTML]='success' class="alert alert-success text-center"></div>
+          <div [hidden]="!errorMsg" [innerHTML]='error' class="alert alert-danger text-center"></div>
+          <form [formGroup]="loginForm" *ngIf="!changePassword">
             <div class="input-group mb-3">
               <input type="text" formControlName="username" id="username" required [ngClass]="(username.invalid && (username.dirty || username.touched)) ? 'form-control is-invalid' : (username.valid)? 'form-control is-valid':'form-control'" autofocus placeholder="Username">
               <div class="input-group-append">
@@ -34,11 +34,47 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-8">
+              <div class="col-7">
               </div>
               <!-- /.col -->
-              <div class="col-4">
+              <div class="col-5">
                 <button type="submit" [disabled]="!loginForm.valid || loginForm.pending || processing" (click)="onSubmit()" class="btn btn-primary btn-block">{{buttonText}}</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+          <form [formGroup]="passwordForm" *ngIf="changePassword">
+            <div class="input-group mb-3">
+                <input type="password" required [ngClass]="(newPassword.invalid && (newPassword.dirty || newPassword.touched)) ? 'form-control is-invalid' : (newPassword.valid)? 'form-control is-valid':'form-control'" formControlName="newPassword" id="newPassword" placeholder="New Password">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+                <div *ngIf="newPassword.invalid && (newPassword.dirty || newPassword.touched)" class="invalid-feedback">
+                    <div *ngIf="newPassword.errors.required">New Password is required</div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input type="password" formControlName="confirmPassword" id="confirmPassword" required [ngClass]="(confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) || ((newPassword.value != confirmPassword.value) && confirmPassword.valid)) ? 'form-control is-invalid' : (confirmPassword.valid)? 'form-control is-valid':'form-control'" placeholder="Confirm Password">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+                <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" class="invalid-feedback">
+                    <div *ngIf="confirmPassword.errors.required">Confirm New Password</div>
+                </div>
+                <div *ngIf="(confirmPassword.valid && (newPassword.value != confirmPassword.value)) && (confirmPassword.dirty || confirmPassword.touched)" class="invalid-feedback">
+                    Password does not match
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-7">
+              </div>
+              <!-- /.col -->
+              <div class="col-5">
+                <button type="submit" [disabled]="!passwordForm.valid || passwordForm.pending || newPassword.value != confirmPassword.value || processing" (click)="onSubmitPassword()" class="btn btn-primary btn-block">{{passwordButtonText}}</button>
               </div>
               <!-- /.col -->
             </div>
