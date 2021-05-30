@@ -14,7 +14,7 @@ import { EncrDecrService } from '../_services/encode.decode.service';
 })
 export class LockComponent implements OnInit {
   redirect: string;
-  userData: { username: string; name: string; };
+  userData: {companyName: string, username: string; name: string; };
   
   processing: boolean = false;
 

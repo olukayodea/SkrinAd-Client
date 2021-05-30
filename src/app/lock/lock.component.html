@@ -6,13 +6,13 @@
         </div>
         <!-- User name -->
         <div [hidden]="!errorMsg" [innerHTML]='error' class="alert alert-danger"></div>
-        <div class="lockscreen-name">{{userData.name}}</div>
+        <div class="lockscreen-name">{{userData.companyName}}</div>
       
         <!-- START LOCK SCREEN ITEM -->
         <div class="lockscreen-item">
           <!-- lockscreen image -->
           <div class="lockscreen-image">
-            <img src="https://ui-avatars.com/api/?name={{userData.name}}&background=0D8ABC&color=fff" alt="{{userData.name}}">
+            <img src="https://ui-avatars.com/api/?name={{userData.companyName}}&background=0D8ABC&color=fff" alt="{{userData.companyName}}">
           </div>
           <!-- /.lockscreen-image -->
       
