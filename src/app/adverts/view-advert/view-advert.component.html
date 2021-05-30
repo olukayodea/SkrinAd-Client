@@ -1,1 +1,571 @@
-<p>view-advert works!</p>
+<div class="hold-transition sidebar-mini layout-navbar-fixed layout-footer-fixed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <app-header></app-header>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <app-sidebar [page]="'adverts'" [subPage]="'manage'"></app-sidebar>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Adverts</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a [routerLink]="['/adverts']">Adverts</a></li>
+                            <li class="breadcrumb-item active">{{advertData.title}}</li>
+                        </ol>
+                    </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="sticky-top mb-3">
+                                <!-- Profile Image -->
+                                <div class="card card-primary card-outline">
+                                    <div class="card-body box-profile">
+                                        <h3 class="profile-username text-center">{{advertData.title}}</h3>
+                                        <p class="text-muted text-center">{{advertData.caption}}</p>
+                                        <div class="alert alert-warning" role="alert" *ngIf="advertData.status.new === true && (advertData.gallery | json)  === '[]'">
+                                            Go to the gallery to upload <span [innerHTML]="advertData.type == 'Pictures'? 'Images' : 'Videos'" ></span> for this advert to continue the advert setup
+                                        </div>
+
+                                        <!-- form start -->
+                                        <form [formGroup]="extendForm" *ngIf="extend">
+                                            <div class="card-header">
+                                                <h3 class="card-title">
+                                                    Extend Advert Campaign
+                                                </h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="impression">Impressions<em>*</em></label>
+                                                    <input type="number" required [ngClass]="(impression.invalid && (impression.dirty || impression.touched)) ? 'form-control is-invalid' : (impression.valid)? 'form-control is-valid':'form-control'" formControlName="impression" id="impression" placeholder="Impressions" (keyup)="calculateImpression()" (change)="calculateImpression()">
+                                                    <div *ngIf="impression.invalid && (impression.dirty || impression.touched)" class="invalid-feedback">
+                                                        <div *ngIf="impression.errors.required">Impressions is required</div>
+                                                        <div *ngIf="impression.errors.min">Minimum Impression of 1000 not met</div>
+                                                        <div *ngIf="impression.errors.incorrect">Your wallet balance is not enough to make this purchase</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+
+                                            <div class="card-footer">
+                                                <button type="submit" [disabled]="!extendForm.valid || extendForm.pending || processing" (click)="onExtend()" class="btn btn-primary">{{extendButtonText}}</button>&nbsp;
+                                                <button type="button" (click)="doExtend(false)" class="btn btn-primary">Cancel</button>
+                                            </div>
+                                        </form>
+                                        <ul class="list-group list-group-unbordered mb-3">
+                                            <li class="list-group-item">
+                                                <b>Code</b> <a class="float-right">{{advertData.code}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Progress</b> <a class="float-right">
+                                                    <span [class]="
+                                                    advertData.statistics.advertProgress < 65 ? 'badge bg-success' :
+                                                    advertData.statistics.advertProgress < 90 ? 'badge bg-warning' : 'badge bg-danger'">
+                                                        {{advertData.statistics.advertProgress}}%
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Landing URL</b> <a class="float-right" href="{{advertData.url}}" target="_blank">
+                                                    {{getHostname(advertData.url)}} <i class="fas fa-external-link-alt"></i></a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Status</b> <a class="float-right">
+                                                    <span [class]="
+                                                    advertData.status.new === true ? 'badge bg-primary' : 
+                                                    advertData.status.pending === true ? 'badge bg-warning' : 
+                                                    advertData.status.active === true ? 'badge bg-info' : 
+                                                    advertData.status.inactive === true ? 'badge bg-secondary' : 
+                                                    advertData.status.complete === true ? 'badge bg-success' : 
+                                                        'badge bg-danger'" [innerHTML]="
+                                                        advertData.status.new === true ? 'New' : 
+                                                        advertData.status.pending === true ? 'Pending' : 
+                                                        advertData.status.active === true ? 'Active' : 
+                                                        advertData.status.inactive === true ? 'In-Active' : 
+                                                        advertData.status.complete === true ? 'Completed' : 
+                                                        'Deleted'">
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Payment</b> <a class="float-right">
+                                                    <span [class]="
+                                                    advertData.payment_status.approved === true ? 'badge bg-success' : 
+                                                        'badge bg-danger'" [innerHTML]="
+                                                        advertData.payment_status.approved === true ? 'Approved' : 
+                                                        'Not Approved'">
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Created</b> <a class="float-right">{{advertData.created}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Last Modified</b> <a class="float-right">{{advertData.lastModified}}</a>
+                                            </li>
+                                        </ul>
+                                        <button *ngIf="(advertData.payment_status.notApproved === true) && (advertData.gallery | json)  != '[]' && walletBalance >= 0" [disabled]='processing' data-toggle="modal" data-target="#modal-secondary" class="btn btn-primary btn-block"><b>Approve</b></button>
+                                        <button *ngIf="advertData.payment_status.approved === true && advertData.impression.used >= advertData.impression.issued " [disabled]='processing' (click)='doExtend(true)' class="btn btn-primary btn-block"><b>Extend Campaign</b></button>
+                        
+                                        <button *ngIf="advertData.payment_status.approved === true && advertData.status.active === true" [disabled]='processing' data-toggle="modal" data-target="#modal-deactivate" class="btn btn-primary btn-block"><b>De-Activate</b></button>
+                                        <button *ngIf="advertData.payment_status.approved === true && advertData.status.inactive === true" [disabled]='processing' data-toggle="modal" data-target="#modal-activate" class="btn btn-primary btn-block"><b>Activate</b></button>
+                        
+                                        <button [disabled]='processing' data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-block"><b>Delete</b></button>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+                            <div class="card card-primary card-outline">
+                                <img [hidden]='!loading' [class]="loading?'mx-auto d-block':''" src="assets/LoadingGIF/Rolling-1s-75px.gif">
+
+                                <!-- Default box -->
+                                <div [hidden]='loading'>
+                                    <div class="card-header">
+                                        <ul class="nav nav-pills">
+                                            <li class="nav-item"><a class="nav-link" [routerLink]="['/adverts']" [queryParams]="{back:true}" data-toggle="tab"><i class="fas fa-angle-double-left"></i></a></li>&nbsp;
+                                            <li class="nav-item"><a (click)="changeTab('details')" class="nav-link active" href="#activity" data-toggle="tab">Details</a></li>
+                                            <li class="nav-item"><a (click)="changeTab('gallery')" class="nav-link" href="#activity" data-toggle="tab">Gallery</a></li>
+                                            <li *ngIf='advertData.status.new === false && advertData.status.deleted === false && advertData.status.pending === false' class="nav-item"><a (click)="changeTab('stats')" class="nav-link" href="#timeline" data-toggle="tab">Statistics and Data</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+                                        </ul>
+                                    </div>
+                                    <div *ngIf="detailsTab === true" class="card-body p-0">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            General Details
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <dl>
+                                                            <dt>Categories</dt>
+                                                            <dd><span *ngFor="let category of advertData.category;"><span class="badge bg-primary">{{category.title}}</span>&nbsp;</span></dd>
+                                                            <dt>Area</dt>
+                                                            <dd><span *ngFor="let areas of advertData.areas;"><span class="badge bg-primary">{{areas}}</span>&nbsp;</span></dd>
+                                                            <dt>Available Date</dt>
+                                                            <dd><span *ngFor="let avail_date of advertData.avail_date;"><span class="badge bg-primary">{{avail_date}}</span>&nbsp;</span></dd>
+                                                            <dt>Age Range</dt>
+                                                            <dd><span *ngFor="let age of advertData.age;"><span class="badge bg-primary">{{age}}</span>&nbsp;</span></dd>
+                                                            <dt>Target Gender</dt>
+                                                            <dd><span *ngFor="let gender of advertData.gender;"><span class="badge bg-primary">{{gender}}</span>&nbsp;</span></dd>
+                                                        </dl>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Impression
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p>
+                                                            <strong>Booked</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.impression.issued)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Used</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.impression.used)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Added</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.impression.added)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Total</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.impression.total)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Remaining</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.impression.remaining)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Daily Cap</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.impression.dailyCap)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Estimated Run Time</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.impression.runTime)"></span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Finance
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p>
+                                                            <strong>Amount / Impression</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.finance.amtPerImp.currency.symbol + ' '+ numberWithCommas(advertData.finance.amtPerImp.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Campaign Total</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.finance.campaignTotal.currency.symbol + ' '+ numberWithCommas(advertData.finance.campaignTotal.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Wallet Balance</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.finance.wallet.currentBalance.currency.symbol + ' '+ numberWithCommas(advertData.finance.wallet.currentBalance.amount)"></span>
+                                                        </p>
+                                                        <p *ngIf="advertData.payment_status.notApproved === true">
+                                                            <strong>Balance after Payment</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.finance.wallet.newBalance.currency.symbol + ' '+ numberWithCommas(advertData.finance.wallet.newBalance.amount)"></span>
+                                                        </p>
+                                                        <p *ngIf="advertData.status.pending === true && (advertData.gallery | json)  != '[]' && walletBalance < 0">
+                                                            <strong>Balance Due</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.finance.wallet.currentBalance.currency.symbol + ' '+ numberWithCommas(amountDue)"></span>
+                                                        </p>
+                                                        <a [routerLink]="['/wallet', userData.ref]" *ngIf="advertData.status.pending === true && (advertData.gallery | json)  != '[]' && walletBalance < 0" class="btn btn-primary btn-block"><b>Make Payment</b></a>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Owner
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <dl>
+                                                            <dt>Agency</dt>
+                                                            <dd>{{advertData.owner.companyName}}</dd>
+                                                            <dt>Contact Name</dt>
+                                                            <dd>{{advertData.owner.name}}</dd>
+                                                            <dt>Contact Email</dt>
+                                                            <dd>{{advertData.owner.contactEmail}}</dd>
+                                                            <dt>Contact Phone</dt>
+                                                            <dd>{{advertData.owner.contactPhone}}</dd>
+                                                        </dl>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card" *ngIf="(advertData.subOwner | json)  != '[]'">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Sub Client
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <dl>
+                                                            <dt>Agency</dt>
+                                                            <dd>{{advertData.subOwner.companyName}}</dd>
+                                                            <dt>Contact Name</dt>
+                                                            <dd>{{advertData.subOwner.name}}</dd>
+                                                            <dt>Contact Email</dt>
+                                                            <dd>{{advertData.subOwner.contactEmail}}</dd>
+                                                            <dt>Contact Phone</dt>
+                                                            <dd>{{advertData.subOwner.contactPhone}}</dd>
+                                                        </dl>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="galleryTab === true" class="card-body p-0">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card" *ngIf="(advertData.gallery | json)  != '[]'">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            <span [innerHTML]="advertData.type == 'Pictures'? 'Image' : 'Video'" ></span> Gallery
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body" *ngIf="advertData.type == 'Video'">
+                                                        <video class="videoBorder" width="300" controls *ngFor="let gallery of advertData.gallery;">
+                                                            <source src="{{gallery.url}}" type="video/{{gallery.type}}">
+                                                            Your browser does not support HTML5 video.
+                                                        </video>
+                                                    </div>
+                                                    <div class="card-body" *ngIf="advertData.type == 'Pictures'">
+                                                        <img *ngFor="let gallery of advertData.gallery;" src="{{gallery.url}}" width="200">
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Add <span [innerHTML]="advertData.type == 'Pictures'? 'Image' : 'Video'" ></span> to Gallery
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <form [formGroup]="dataForm">
+                                                            <div class="form-group">
+                                                                <label for="mediaFile">Media Upload</label>
+                                                                <div class="input-group">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" [accept]="advertData.type == 'Pictures' ? 'image/*' : 'video/*'" class="custom-file-input" required [ngClass]="(mediaFile.invalid && (mediaFile.dirty || mediaFile.touched)) ? 'form-control is-invalid' : (mediaFile.valid)? 'form-control is-valid':'form-control'" formControlName="mediaFile" id="mediaFile" (change)="onFileChange($event.target.files)">
+                                                                        <label class="custom-file-label" for="mediaFile">Choose file</label>
+                                                                    </div>
+                                                                    <div class="input-group-append">
+                                                                        <button [disabled]="!dataForm.valid || dataForm.pending || processing" (click)="upload()" class="btn btn-primary">{{buttonText}}</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="statTab === true" class="card-body p-0">
+                                        <!-- <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="{{advertData.statistics.advertProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{advertData.statistics.advertProgress}}%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Impressions and Clicks
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p class="text-center"><strong>Summary</strong></p>
+                                                        <p>
+                                                            <strong>Impressions Delivered</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.summary.seen)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Impressions Clicked</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.summary.clicked)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>URL Visits</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.summary.urlVisit)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>CLick Rate</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.summary.clickThroRate)+'%'"></span>
+                                                        </p>
+                                                        <p class="text-center"><strong>Impressions</strong></p>
+                                                        <p>
+                                                            <strong>Assigned</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.impression.assigned)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Used</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.impression.used)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Un-Used</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.impression.unused)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Saved</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.impression.saved)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Total</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(advertData.statistics.impression.total)"></span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Budget
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p>
+                                                            <strong>Used</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.statistics.budget.used.currency.symbol + ' '+ numberWithCommas(advertData.statistics.budget.used.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Unused</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.statistics.budget.unused.currency.symbol + ' '+ numberWithCommas(advertData.statistics.budget.unused.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Total (Gross)</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.statistics.budget.gross.currency.symbol + ' '+ numberWithCommas(advertData.statistics.budget.gross.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Total (Net)</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.statistics.budget.net.currency.symbol + ' '+ numberWithCommas(advertData.statistics.budget.net.amount)"></span>
+                                                        </p>
+                                                        <p class="text-center"><strong>Gains</strong></p>
+                                                        <p>
+                                                            <strong>In Impresion</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.statistics.budget.gains.impression.currency.symbol + ' '+ numberWithCommas(advertData.statistics.budget.gains.impression.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>In Wallet</strong>
+                                                            <span class="float-right" [innerHTML]="advertData.statistics.budget.gains.wallet.currency.symbol + ' '+ numberWithCommas(advertData.statistics.budget.gains.wallet.amount)"></span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                        </div>
+                                        <app-map [statistics]='advertData.statistics' [refund]='advertData.refund'></app-map>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+            <!-- /.content-wrapper -->
+
+        </div>
+        <!-- /.content-wrapper -->
+        <app-footer></app-footer>
+    </div>
+    <!-- ./wrapper -->
+</div>
+<div class="modal fade" id="modal-secondary">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Approve Advert</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will activate this advert and ' + advertData.finance.campaignTotal.currency.symbol + numberWithCommas(advertData.finance.campaignTotal.amount) + ' will be billed to the ' + advertData.owner.companyName + ' account. Are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" (click)="changeAdvertStatus('approve')" class="btn btn-outline-light">Approve Advert</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div class="modal fade" id="modal-activate">
+  <div class="modal-dialog">
+    <div class="modal-content bg-secondary">
+      <div class="modal-header">
+        <h4 class="modal-title">Activate Advert</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p [innerHTML]="'This action will activate this advert. Are you sure you want to continue ?'"></p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+        <button type="button" (click)="changeAdvertStatus('activate')" class="btn btn-outline-light">Activate Advert</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div class="modal fade" id="modal-deactivate">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Deactivate Advert</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will deactivate this advert. Are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" (click)="changeAdvertStatus('deactivate')" class="btn btn-outline-light">Deactivate Advert</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+  <!-- /.modal -->
+<div class="modal fade" id="modal-delete">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Advert</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will remove this advert. This action is not reversable, are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline-light" (click)="deleteAdvert()">Delete Advert</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+  <!-- /.modal -->

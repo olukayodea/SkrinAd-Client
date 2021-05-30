@@ -8,6 +8,7 @@ import { LockComponent } from './lock/lock.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ProfileComponent } from './profile/profile.component';
+import { WalletComponent } from './wallet/wallet.component';
 
 const routes: Routes = [
   { path: "", component: DefaultComponent },
@@ -25,6 +26,10 @@ const routes: Routes = [
 
   { path:"profile/:id", component: ProfileComponent },
   { path:"profile", component: ProfileComponent },
+  
+  { path:"wallet/:id/:view", component: WalletComponent },
+  { path:"wallet/:id", component: WalletComponent },
+  { path:"wallet", component: WalletComponent },
 ];
 
 @NgModule({

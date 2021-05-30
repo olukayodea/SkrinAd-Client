@@ -72,6 +72,11 @@ export class CountryData {
     }
 }
 
+export class AreasData {
+    ref: number;
+    state: string;
+}
+
 export class CurrencyData {
     ref: number;
     title: string;
@@ -89,4 +94,14 @@ export class ChartData {
     label: string[] = [];
     data: number[] = [];
     shade: string[] = [];
+}
+  
+export class CategoryData {
+    ref: number;
+    title: string;
+    status: MainStatus;
+
+    constructor() {
+        this.status = new MainStatus();
+    }
 }

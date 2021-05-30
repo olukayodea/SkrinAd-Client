@@ -21,6 +21,7 @@ import { CampaignComponent } from './adverts/campaign/campaign.component';
 import { AdvertsComponent } from './adverts/adverts.component';
 import { ViewAdvertComponent } from './adverts/view-advert/view-advert.component';
 import { PaginationComponent } from './common/widget/pagination/pagination.component';
+import { WalletComponent } from './wallet/wallet.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { PaginationComponent } from './common/widget/pagination/pagination.compo
     CampaignComponent,
     AdvertsComponent,
     ViewAdvertComponent,
-    PaginationComponent
+    PaginationComponent,
+    WalletComponent
   ],
   imports: [
     BrowserModule,

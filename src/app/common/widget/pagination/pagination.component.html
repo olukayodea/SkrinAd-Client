@@ -1,1 +1,9 @@
-<p>pagination works!</p>
+<nav aria-label="Contacts Page Navigation">
+    <ul class="pagination justify-content-center m-0">
+        <li class="page-item" *ngIf='prev > 0'><a class="page-link" [routerLink]="[link]" (click)="route(1)">&lt;&lt;</a></li>
+        <li class="page-item" *ngIf='prev > 0'><a class="page-link" [routerLink]="[link]" (click)="route(counts.currentPage-1)" [queryParams]="{page:counts.currentPage-1}">&lt;</a></li>
+        <li [class]="i == counts.currentPage? 'page-item active' : 'page-item'" *ngFor='let i of range' class="page-item"><a class="page-link" [routerLink]="[link]" [queryParams]="{page:i}" (click)="route(i)">{{i}}</a></li>
+        <li class="page-item" *ngIf='next <= last'><a class="page-link" [routerLink]="[link]" [queryParams]="{page:counts.currentPage+1}" (click)="route(counts.currentPage+1)">&gt;</a></li>
+        <li class="page-item" *ngIf='next <= last'><a class="page-link" [routerLink]="[link]" [queryParams]="{page:counts.totalPage}" (click)="route(counts.totalPage)">&gt;&gt;</a></li>
+    </ul>
+</nav>

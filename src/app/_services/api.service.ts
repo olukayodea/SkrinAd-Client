@@ -10,7 +10,7 @@ import { User } from '../_models/users';
 // import { SystemReport } from '../_models/systemReports';
 // import { Transactions } from '../_models/transactions';
 // import { Country, OneCountry } from '../_models/country';
-// import { Adverts, AllAdvertData, OneAdvert } from '../_models/advert';
+import { Adverts, AllAdvertData, OneAdvert } from '../_models/advert';
 // import { Clients, OneClient } from '../_models/clients';
 // import { OneWallet, Wallet } from '../_models/wallet';
 // import { Admin, AdminRight, AllowedRightData, OneAdmin } from '../_models/admin';
@@ -210,22 +210,22 @@ export class ApiService {
   //   return responseData;
   // }
 
-  // getOneAdvert(id:number): Observable<OneAdvert> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  getOneAdvert(id:number): Observable<OneAdvert> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.get(this.baseUrl + 'content/get/'+id, httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.get(this.baseUrl + 'content/get/'+id, httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
   // getDashData(): Observable<Dashboard> {
   //   var token = this.checkService.getToken();
@@ -244,39 +244,39 @@ export class ApiService {
   //   return responseData;
   // }
 
-  // getAdverts(page:number, view:string): Observable<Adverts> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  getAdverts(page:number, view:string): Observable<Adverts> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.get(this.baseUrl + 'content/get/'+view+'?page='+page, httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.get(this.baseUrl + 'content/get/'+view+'?page='+page, httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
-  // getClientAdverts(id:number, page:number, view:string): Observable<Adverts> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  getRuningAdverts(page:number): Observable<Adverts> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.get(this.baseUrl + 'clients/content/'+id+view+'?page='+page, httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.get(this.baseUrl + 'content/get/running?page='+page, httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
   // postWallet(data): Observable<OneWallet> {
   //   var token = this.checkService.getToken();
@@ -414,22 +414,22 @@ export class ApiService {
   //   return responseData;
   // }
 
-  // getData(): Observable<AllAdvertData> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  getData(): Observable<AllAdvertData> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.get(this.baseUrl + 'content/getData', httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.get(this.baseUrl + 'content/getData', httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
   // getRightData(): Observable<AllowedRightData> {
   //   var token = this.checkService.getToken();
@@ -672,40 +672,40 @@ export class ApiService {
   //   return responseData;
   // }
 
-  // createAdvert(data): Observable<OneAdvert> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  createAdvert(data): Observable<OneAdvert> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.post(this.baseUrl + 'content/create', JSON.stringify(data), httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.post(this.baseUrl + 'content/create', JSON.stringify(data), httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
-  // extendAdvert(data): Observable<OneAdvert> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  extendAdvert(data): Observable<OneAdvert> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
 
-  //   const responseData = this.put(this.baseUrl + 'content/extend', JSON.stringify(data), httpOptions);
+    const responseData = this.put(this.baseUrl + 'content/extend', JSON.stringify(data), httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
   // editAgency(data): Observable<OneClient> {
   //   var token = this.checkService.getToken();
@@ -724,22 +724,22 @@ export class ApiService {
   //   return responseData;
   // }
 
-  // editAdvert(data): Observable<OneAdvert> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  editAdvert(data): Observable<OneAdvert> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.put(this.baseUrl + 'content/edit', JSON.stringify(data), httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.put(this.baseUrl + 'content/edit', JSON.stringify(data), httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
   // changeCountryStatus(data): Observable<Country> {
   //   var token = this.checkService.getToken();
@@ -809,22 +809,22 @@ export class ApiService {
   //   return responseData;
   // }
 
-  // changeAdvertStatus(data): Observable<OneAdvert> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  changeAdvertStatus(data): Observable<OneAdvert> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.put(this.baseUrl + 'content/changeStatus', JSON.stringify(data), httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.put(this.baseUrl + 'content/changeStatus', JSON.stringify(data), httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
   // resetAdminPassword(ref): Observable<OneClient> {
   //   var token = this.checkService.getToken();
@@ -911,22 +911,22 @@ export class ApiService {
   //   return responseData;
   // }
 
-  // deleteAdvert(ref): Observable<OneAdvert> {
-  //   var token = this.checkService.getToken();
-  //   var gateway_passcode = btoa(this.product_key + "_" + token);
+  deleteAdvert(ref): Observable<OneAdvert> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
 
-  //   // request headers
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer '+gateway_passcode,
-  //       'key': this.product_key.toString()
-  //     })
-  //   }
-  //   const responseData = this.delete(this.baseUrl + 'content/remove/'+ref, httpOptions);
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.delete(this.baseUrl + 'content/remove/'+ref, httpOptions);
 
-  //   return responseData;
-  // }
+    return responseData;
+  }
 
   // editCountry(data): Observable<Country> {
   //   var token = this.checkService.getToken();
