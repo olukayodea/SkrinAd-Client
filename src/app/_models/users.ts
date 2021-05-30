@@ -1,4 +1,4 @@
-import { AccountStatus, CountryData, Error } from './data';
+import { AccountStatus, CountryData, Error, FinanceData } from './data';
 
 export class User {
   success: true|false;
@@ -12,12 +12,14 @@ export class User {
 export class UserData {
     ref: number;
     token: string;
+    country: CountryData;
     username: string;
     name: string;
-    phone: string;
-    email: string;
-    country: CountryData;
+    companyName: string;
+    contactEmail: string;
+    contactPhone: string;
     accountStatus: AccountStatus;
+    wallet: FinanceData;
     created: string;
     lastModified: string;
 

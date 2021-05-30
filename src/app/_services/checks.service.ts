@@ -73,6 +73,7 @@ export class ChecksService {
           return data;
         } else {
           var sessionData: object = {
+            companyName: data.companyName,
             username: data.username,
             name: data.name
           }

@@ -16,6 +16,11 @@ import { LockComponent } from './lock/lock.component';
 import { FooterComponent } from './common/pages/footer/footer.component';
 import { HeaderComponent } from './common/pages/header/header.component';
 import { SidebarComponent } from './common/pages/sidebar/sidebar.component';
+import { ProfileComponent } from './profile/profile.component';
+import { CampaignComponent } from './adverts/campaign/campaign.component';
+import { AdvertsComponent } from './adverts/adverts.component';
+import { ViewAdvertComponent } from './adverts/view-advert/view-advert.component';
+import { PaginationComponent } from './common/widget/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +31,12 @@ import { SidebarComponent } from './common/pages/sidebar/sidebar.component';
     LockComponent,
     FooterComponent,
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
+    ProfileComponent,
+    CampaignComponent,
+    AdvertsComponent,
+    ViewAdvertComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,

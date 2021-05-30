@@ -52,7 +52,23 @@ export class ApiService {
       })
     }
 
-    const responseData = this.post(this.baseUrl + 'admin/login', JSON.stringify(data), httpOptions);
+    const responseData = this.post(this.baseUrl + 'user/login', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
+  setPassword(data, token): Observable<User> {
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.put(this.baseUrl + 'user/setPassword', JSON.stringify(data), httpOptions);
 
     return responseData;
   }
@@ -546,7 +562,8 @@ export class ApiService {
         'key': this.product_key.toString()
       })
     }
-    const responseData = this.put(this.baseUrl + 'admin/updatePassword', JSON.stringify(data), httpOptions);
+    console.log(token);
+    const responseData = this.put(this.baseUrl + 'user/updatePassword', JSON.stringify(data), httpOptions);
 
     return responseData;
   }
@@ -563,7 +580,7 @@ export class ApiService {
         'key': this.product_key.toString()
       })
     }
-    const responseData = this.put(this.baseUrl + 'admin/profile', JSON.stringify(data), httpOptions);
+    const responseData = this.put(this.baseUrl + 'user/profile', JSON.stringify(data), httpOptions);
 
     return responseData;
   }
