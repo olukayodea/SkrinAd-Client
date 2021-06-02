@@ -147,7 +147,6 @@
                                             <li class="nav-item"><a (click)="changeTab('details')" class="nav-link active" href="#activity" data-toggle="tab">Details</a></li>
                                             <li class="nav-item"><a (click)="changeTab('gallery')" class="nav-link" href="#activity" data-toggle="tab">Gallery</a></li>
                                             <li *ngIf='advertData.status.new === false && advertData.status.deleted === false && advertData.status.pending === false' class="nav-item"><a (click)="changeTab('stats')" class="nav-link" href="#timeline" data-toggle="tab">Statistics and Data</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
                                         </ul>
                                     </div>
                                     <div *ngIf="detailsTab === true" class="card-body p-0">
@@ -250,7 +249,7 @@
                                                             <strong>Balance Due</strong>
                                                             <span class="float-right" [innerHTML]="advertData.finance.wallet.currentBalance.currency.symbol + ' '+ numberWithCommas(amountDue)"></span>
                                                         </p>
-                                                        <a [routerLink]="['/wallet', userData.ref]" *ngIf="advertData.status.pending === true && (advertData.gallery | json)  != '[]' && walletBalance < 0" class="btn btn-primary btn-block"><b>Make Payment</b></a>
+                                                        <a [routerLink]="['/wallet']" *ngIf="advertData.status.pending === true && (advertData.gallery | json)  != '[]' && walletBalance < 0" class="btn btn-primary btn-block"><b>Make Payment</b></a>
                                                     </div>
                                                     <!-- /.card-body -->
                                                 </div>

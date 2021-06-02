@@ -21,40 +21,12 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     public checkService: ChecksService,
-    private apiService: ApiService,
-    private notifyService: NotificationService,
     private router: Router,
-    private EncrDecr: EncrDecrService
   ) { }
 
   ngOnInit(): void {
     this.userData = this.checkService.checkSession(true);
     this.auth = parseInt(localStorage.getItem('auth'));
-  }
-
-  setLocation(location) {
-    this.apiService.setLocation(location).subscribe(
-      data => {
-        this.checkService.checkLoggedin(data);
-        if (data.success == true) {
-          var currentTime = Math.floor((Date.now() / 1000) + (60 * 10));
-          
-          let randKey = this.checkService.getRandomString(32);
-          var keydata = {
-            key: randKey,
-            expire: currentTime.toString()
-          }
-
-          localStorage.setItem('key', btoa( JSON.stringify(keydata)) );
-          localStorage.setItem('userData', this.EncrDecr.set(environment.localKey+randKey, JSON.stringify(data.data)));
-          this.userData = data.data;
-
-          window.location.href = this.pageUrl;
-        } else {
-          this.notifyService.showError(data.error.message, "Error")
-        }
-      }
-    );
   }
 
 }

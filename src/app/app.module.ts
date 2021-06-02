@@ -22,6 +22,8 @@ import { AdvertsComponent } from './adverts/adverts.component';
 import { ViewAdvertComponent } from './adverts/view-advert/view-advert.component';
 import { PaginationComponent } from './common/widget/pagination/pagination.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { MapComponent } from './common/widget/map/map.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { WalletComponent } from './wallet/wallet.component';
     AdvertsComponent,
     ViewAdvertComponent,
     PaginationComponent,
-    WalletComponent
+    WalletComponent,
+    MapComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

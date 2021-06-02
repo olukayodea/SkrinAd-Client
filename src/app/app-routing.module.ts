@@ -4,6 +4,7 @@ import { AdvertsComponent } from './adverts/adverts.component';
 import { CampaignComponent } from './adverts/campaign/campaign.component';
 import { ViewAdvertComponent } from './adverts/view-advert/view-advert.component';
 import { DefaultComponent } from './default/default.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LockComponent } from './lock/lock.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
@@ -18,18 +19,19 @@ const routes: Routes = [
   { path: "logout/:parameter", component: LogoutComponent },
   { path: "logout", component: LogoutComponent },
   { path: "lock", component: LockComponent },
+  { path: "password", component: ForgotPasswordComponent },
 
-  { path:"adverts/view/:id", component: ViewAdvertComponent },
-  { path:"adverts/campaign", component: CampaignComponent },
-  { path:"adverts/:view", component: AdvertsComponent },
-  { path:"adverts", component: AdvertsComponent },
+  { path: "adverts/view/:id", component: ViewAdvertComponent },
+  { path: "adverts/campaign", component: CampaignComponent },
+  { path: "adverts/:view", component: AdvertsComponent },
+  { path: "adverts", component: AdvertsComponent },
 
-  { path:"profile/:id", component: ProfileComponent },
-  { path:"profile", component: ProfileComponent },
+  { path: "profile/:id", component: ProfileComponent },
+  { path: "profile", component: ProfileComponent },
   
-  { path:"wallet/:id/:view", component: WalletComponent },
-  { path:"wallet/:id", component: WalletComponent },
-  { path:"wallet", component: WalletComponent },
+  { path: "wallet/:id/:view", component: WalletComponent },
+  { path: "wallet/:id", component: WalletComponent },
+  { path: "wallet", component: WalletComponent },
 ];
 
 @NgModule({

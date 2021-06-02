@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AdvertsData } from '../_models/advert';
+import { DashboardData } from '../_models/homePage';
 import { UserData } from '../_models/users';
 import { ApiService } from '../_services/api.service';
 import { ChecksService } from '../_services/checks.service';
@@ -13,7 +15,7 @@ export class DefaultComponent implements OnInit {
   userData!: UserData;
   auth!: number;
 
-  dashData: [];
+  dashData: DashboardData;
 
   loadingAgeRange = true;
   loadingAgeGender = true;
@@ -23,7 +25,7 @@ export class DefaultComponent implements OnInit {
   loadingActiveUser = true;
   loading = true;
 
-  advertList: [] = [];
+  advertList: AdvertsData[] = [];
   surveyList: [] = [];
   reportList: [] = [];
 
@@ -39,11 +41,31 @@ export class DefaultComponent implements OnInit {
     private apiService: ApiService,
     private notifyService: NotificationService,
   ) {
+    this.dashData = new DashboardData();
   }
 
   ngOnInit(): void {
     this.userData = this.checkService.checkSession();
     this.auth = parseInt(localStorage.getItem('auth'));
+
+    this.getDashData();
+  }
+
+  getDashData() {
+    this.apiService.getDashData().subscribe(
+      data => {
+        this.checkService.checkLoggedin(data);
+        if (data.success == true) {
+          this.dashData = data.data;
+          this.advertList = data.data.advert;
+          this.surveyList = data.data.survey;
+          this.loading = false;
+        } else {
+          this.notifyService.showError(data.error.message, "Error")
+        }
+      }
+    );
+
   }
 
 }

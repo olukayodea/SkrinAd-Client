@@ -162,34 +162,34 @@ export class LoginComponent implements OnInit {
     this.apiService.setPassword(password, this.tempToken).subscribe(
       user => {
         let randKey = this.checkService.getRandomString(32);
-        if (user.success == true) {
+        // if (user.success == true) {
 
-          // Save user to Local storage
+        //   // Save user to Local storage
 
-          var currentTime = Math.floor((Date.now() / 1000) + (60 * 10));
+        //   var currentTime = Math.floor((Date.now() / 1000) + (60 * 10));
           
-          var keydata = {
-            key: randKey,
-            expire: currentTime.toString()
-          }
+        //   var keydata = {
+        //     key: randKey,
+        //     expire: currentTime.toString()
+        //   }
 
-          localStorage.setItem('key', btoa( JSON.stringify(keydata)) );
-          localStorage.setItem('userData', this.EncrDecr.set(environment.localKey+randKey, JSON.stringify(user.data)));
+        //   localStorage.setItem('key', btoa( JSON.stringify(keydata)) );
+        //   localStorage.setItem('userData', this.EncrDecr.set(environment.localKey+randKey, JSON.stringify(user.data)));
 
-          this.redirect = localStorage.getItem('route');
+        //   this.redirect = localStorage.getItem('route');
 
-          // if (this.redirect !== undefined) {     
-          //   this.redirect = user.data.mainPage
-          // }
+        //   // if (this.redirect !== undefined) {     
+        //   //   this.redirect = user.data.mainPage
+        //   // }
           
-          window.location.href = decodeURIComponent(this.redirect);
-          // this.router.navigate(['/'+decodeURIComponent(this.redirect)]);
-        } else {
-          this.errorMsg = true;
-          this.error = user.error.message;
-          this.passwordButtonText = "Change";
-          this.processing = false;
-        }
+        //   window.location.href = decodeURIComponent(this.redirect);
+        //   // this.router.navigate(['/'+decodeURIComponent(this.redirect)]);
+        // } else {
+        //   this.errorMsg = true;
+        //   this.error = user.error.message;
+        //   this.passwordButtonText = "Change";
+        //   this.processing = false;
+        // }
       }
     );
   }

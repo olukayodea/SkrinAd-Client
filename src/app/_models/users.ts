@@ -48,3 +48,10 @@ export class ClientsData {
       this.accountStatus = new AccountStatus();
     }
 }
+
+export class PasswordData {
+  success: true|false;
+  error: Error;
+  results: string;
+  message: string;
+}

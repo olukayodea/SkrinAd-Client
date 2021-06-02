@@ -82,23 +82,6 @@
                         <p>Wallet</p>
                     </a>
                 </li>
-                <li [class]="page == 'reports'? 'menu-open active' : ''" class="nav-item">
-                    <a [routerLink]="" [class]="page == 'reports'? 'nav-link active' : 'nav-link'">
-                        <i class="fas fa-money-check-alt nav-icon"></i>
-                        <p>
-                            Reports
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a [routerLink]="['/reports/transaction']" [class]="page == 'reports' && subPage == 'transaction'? 'nav-link active' : 'nav-link'">
-                                <i class="fas fa-minus nav-icon"></i>
-                                <p>Transactions</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
