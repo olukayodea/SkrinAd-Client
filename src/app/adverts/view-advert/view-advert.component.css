@@ -1,0 +1,7 @@
+.videoBorder {
+	margin: 0 auto;
+    border: 5px solid #FFF;
+}
+.container { position: relative; }
+.container img { display: block; }
+.container .fa-trash-alt { position: absolute; top:0; right:0; }

@@ -120,6 +120,24 @@ export class ApiService {
     return responseData;
   }
 
+  removeGallery(id:number) {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+
+    const responseData = this.delete(this.baseUrl + 'content/files/'+id, httpOptions);
+
+    return responseData;
+  }
+
   uploadFile(id:number, file: File) {
     var token = this.checkService.getToken();
     var gateway_passcode = btoa(this.product_key + "_" + token);

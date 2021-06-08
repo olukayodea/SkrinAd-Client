@@ -103,10 +103,10 @@
                                     <form [formGroup]="dataForm">
                                         <div class="card-body">
                                             <div class="form-group">
-                                                <label for="client_name">Agency Name</label>
+                                                <label for="client_name">Client Name</label>
                                                 <input type="text" required [ngClass]="(client_name.invalid && (client_name.dirty || client_name.touched)) ? 'form-control is-invalid' : (client_name.valid)? 'form-control is-valid':'form-control'" formControlName="client_name" id="client_name" placeholder="Full Names">
                                                 <div *ngIf="client_name.invalid && (client_name.dirty || client_name.touched)" class="invalid-feedback">
-                                                    <div *ngIf="client_name.errors.required">Agency is required</div>
+                                                    <div *ngIf="client_name.errors.required">Client is required</div>
                                                 </div>
                                             </div>
                                             <div class="form-group">

@@ -32,6 +32,7 @@ export class ViewAdvertComponent implements OnInit {
   loading: boolean = true;
 
   advertRef: number;
+  advertGalleryRef: number;
   advertData: AdvertsData;
 
   walletBalance: number;
@@ -230,6 +231,35 @@ export class ViewAdvertComponent implements OnInit {
     this.activatedRoute.url.subscribe(url =>{
       this.ngOnInit();
     });
+  }
+
+  setGalleryID (ref) {
+    this.advertGalleryRef = ref;
+  }
+
+  removeGallery() {
+    this.loading = true;
+
+    this.apiService.removeGallery(this.advertGalleryRef).subscribe(
+      upload => {
+        this.checkService.checkLoggedin(upload);
+        if (upload.success == true) {
+          this.notifyService.showSuccess("Removed file from gallery", "Advert Updated");
+          this.ngOnInit();
+        } else {
+          this.notifyService.showError(upload.error.message, "Error");
+        }
+        this.changeTab("gallery");
+        this.loading = false
+
+        document.getElementById('modal-secondary').click();
+        document.getElementById('modal-activate').click();
+        document.getElementById('modal-deactivate').click();
+        document.getElementById('modal-delete').click();
+        document.getElementById('modal-delete-file').click();
+      }
+    );
+
   }
 
   numberWithCommas(x) {

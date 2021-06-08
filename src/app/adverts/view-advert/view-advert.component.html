@@ -264,7 +264,7 @@
                                                     <!-- /.card-header -->
                                                     <div class="card-body">
                                                         <dl>
-                                                            <dt>Agency</dt>
+                                                            <dt>Client</dt>
                                                             <dd>{{advertData.owner.companyName}}</dd>
                                                             <dt>Contact Name</dt>
                                                             <dd>{{advertData.owner.name}}</dd>
@@ -287,7 +287,7 @@
                                                     <!-- /.card-header -->
                                                     <div class="card-body">
                                                         <dl>
-                                                            <dt>Agency</dt>
+                                                            <dt>Client</dt>
                                                             <dd>{{advertData.subOwner.companyName}}</dd>
                                                             <dt>Contact Name</dt>
                                                             <dd>{{advertData.subOwner.name}}</dd>
@@ -314,14 +314,21 @@
                                                         </h3>
                                                     </div>
                                                     <!-- /.card-header -->
-                                                    <div class="card-body" *ngIf="advertData.type == 'Video'">
-                                                        <video class="videoBorder" width="300" controls *ngFor="let gallery of advertData.gallery;">
-                                                            <source src="{{gallery.url}}" type="video/{{gallery.type}}">
-                                                            Your browser does not support HTML5 video.
-                                                        </video>
-                                                    </div>
-                                                    <div class="card-body" *ngIf="advertData.type == 'Pictures'">
-                                                        <img *ngFor="let gallery of advertData.gallery;" src="{{gallery.url}}" width="200">
+                                                    <div class="card-body container">
+                                                        <div class="row">
+                                                            <div class="col-sm-3" *ngFor="let gallery of advertData.gallery;">
+                                                                <div *ngIf="advertData.type == 'Video'">
+                                                                    <video class="videoBorder" width="300" controls *ngFor="let gallery of advertData.gallery;">
+                                                                        <source src="{{gallery.url}}" type="video/{{gallery.type}}">
+                                                                        Your browser does not support HTML5 video.
+                                                                    </video>
+                                                                </div>
+                                                                <div *ngIf="advertData.type == 'Pictures'">
+                                                                    <img class="" src="{{gallery.url}}" width="200">
+                                                                </div>
+                                                                <a href="#" (click)="setGalleryID(gallery.ref)" data-toggle="modal" data-target="#modal-delete-file" style="color: red;"><i class="fas fa-trash-alt"></i></a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <!-- /.card-body -->
                                                 </div>
@@ -561,6 +568,28 @@
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-outline-light" (click)="deleteAdvert()">Delete Advert</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+  <!-- /.modal -->
+<div class="modal fade" id="modal-delete-file">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Remove Media Content</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will remove this file. This action is not reversable, are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline-light" (click)="removeGallery()">Remove Media Content</button>
         </div>
       </div>
       <!-- /.modal-content -->

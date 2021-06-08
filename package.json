@@ -8,8 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deployDev": "ng build --configuration dev && aws s3 sync dist/SkrinAd-Client s3://test.agency.skrinad.me --delete",
-    "deploy": "ng build --prod && aws s3 sync dist/SkrinAd-Client s3://agency.skrinad.me --delete"
+    "deployDev": "ng build --configuration dev && aws s3 sync dist/SkrinAd-Client s3://test.clients.skrinad.me --delete",
+    "deploy": "ng build --prod && aws s3 sync dist/SkrinAd-Client s3://clients.skrinad.me --delete"
   },
   "private": true,
   "dependencies": {
