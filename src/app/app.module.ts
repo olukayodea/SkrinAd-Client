@@ -24,6 +24,7 @@ import { PaginationComponent } from './common/widget/pagination/pagination.compo
 import { WalletComponent } from './wallet/wallet.component';
 import { MapComponent } from './common/widget/map/map.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     PaginationComponent,
     WalletComponent,
     MapComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,
