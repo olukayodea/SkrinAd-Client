@@ -5,18 +5,9 @@ import { retry, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { ChecksService } from './checks.service';
 import { PasswordData, User } from '../_models/users';
-// import { Currency } from '../_models/currency';
-// import { Category } from '../_models/category';
-// import { SystemReport } from '../_models/systemReports';
-import { Transactions } from '../_models/transactions';
-// import { Country, OneCountry } from '../_models/country';
 import { Adverts, AllAdvertData, OneAdvert } from '../_models/advert';
-// import { Clients, OneClient } from '../_models/clients';
 import { OneWallet, Wallet } from '../_models/wallet';
 import { Dashboard } from '../_models/homePage';
-// import { Admin, AdminRight, AllowedRightData, OneAdmin } from '../_models/admin';
-// import { SiteOptions, SiteSettings } from '../_models/options';
-// import { Dashboard } from '../_models/homePage';
 
 
 @Injectable({
@@ -54,6 +45,20 @@ export class ApiService {
     }
 
     const responseData = this.post(this.baseUrl + 'user/login', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
+  createClient(data): Observable<User> {
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }
+
+    const responseData = this.post(this.baseUrl + 'user/create', JSON.stringify(data), httpOptions);
 
     return responseData;
   }
