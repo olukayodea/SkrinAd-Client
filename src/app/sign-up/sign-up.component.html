@@ -1,0 +1,98 @@
+<div class="hold-transition login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="./"><b>Skrin</b>Ad</a>
+      </div>
+      <!-- /.login-logo -->
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Signup to get a SkrinAd Client Account</p>
+    
+          <div [hidden]="!successMsg" [innerHTML]='success' class="alert alert-success text-center"></div>
+          <div [hidden]="!errorMsg" [innerHTML]='error' class="alert alert-danger text-center"></div>
+          <form [formGroup]="loginForm">
+            <div class="input-group mb-3">
+              <select required [ngClass]="(country.invalid && (country.dirty || country.touched)) ? 'form-control is-invalid' : (country.valid)? 'form-control is-valid':'form-control'" formControlName="country" id="country" autofocus>
+                <option value="">Select Network</option>
+                <option value="ng">Nigeria</option>
+                    <!-- <option *ngFor="let countryRows of countryList;" value="{{countryRows.iso}}">{{countryRows.title}}</option> -->
+                </select>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-globe-africa"></span>
+                </div>
+              </div>
+              <div *ngIf="country.invalid && (country.dirty || country.touched)" class="invalid-feedback">
+                  <div *ngIf="country.errors.required">Target Network is required.</div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="text" formControlName="client_name" id="client_name" required [ngClass]="(client_name.invalid && (client_name.dirty || client_name.touched)) ? 'form-control is-invalid' : (client_name.valid)? 'form-control is-valid':'form-control'" placeholder="Business Name">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-store-alt"></span>
+                </div>
+              </div>
+              <div *ngIf="client_name.invalid && (client_name.dirty || client_name.touched)" class="invalid-feedback">
+                  <div *ngIf="client_name.errors.required">Business Name is required.</div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="text" formControlName="name" id="name" required [ngClass]="(name.invalid && (name.dirty || name.touched)) ? 'form-control is-invalid' : (name.valid)? 'form-control is-valid':'form-control'" autofocus placeholder="Full Name">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+              <div *ngIf="name.invalid && (name.dirty || name.touched)" class="invalid-feedback">
+                  <div *ngIf="name.errors.required">Contact person full name is required.</div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="email" formControlName="email" id="email" required [ngClass]="(email.invalid && (email.dirty || email.touched)) ? 'form-control is-invalid' : (email.valid)? 'form-control is-valid':'form-control'" autofocus placeholder="Email Address">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+                </div>
+              </div>
+              <div *ngIf="email.invalid && (email.dirty || email.touched)" class="invalid-feedback">
+                  <div *ngIf="email.errors.required">E-Mail is required.</div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="tel" formControlName="phone" id="phone" required [ngClass]="(phone.invalid && (phone.dirty || phone.touched)) ? 'form-control is-invalid' : (phone.valid)? 'form-control is-valid':'form-control'" autofocus placeholder="Phone Number">
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-phone"></span>
+                </div>
+              </div>
+              <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="invalid-feedback">
+                  <div *ngIf="phone.errors.required">Phone Number is required.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-7">
+                <div class="icheck-primary">
+                    <input type="checkbox" formControlName="agreeTerms" id="agreeTerms" required [ngClass]="(agreeTerms.invalid && (agreeTerms.dirty || agreeTerms.touched)) ? 'is-invalid' : (agreeTerms.valid)? 'is-valid':''" name="terms" value="agree">
+                    <label for="agreeTerms">
+                    I agree to the <a href="#">terms</a>
+                    </label>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-5">
+                <button type="submit" [disabled]="!loginForm.valid || loginForm.pending || processing" (click)="onSubmit()" class="btn btn-primary btn-block">{{buttonText}}</button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+          <!-- /.social-auth-links -->
+          <p class="mb-1">
+            <a [routerLink]="['/login']">Login</a>
+          </p>
+        </div>
+        <!-- /.login-card-body -->
+      </div>
+    </div>
+    <!-- /.login-box -->
+  </div>
