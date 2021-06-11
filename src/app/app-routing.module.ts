@@ -9,6 +9,7 @@ import { LockComponent } from './lock/lock.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 import { WalletComponent } from './wallet/wallet.component';
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: "logout", component: LogoutComponent },
   { path: "lock", component: LockComponent },
   { path: "password", component: ForgotPasswordComponent },
+  { path: "signUp", component: SignUpComponent },
 
   { path: "adverts/view/:id", component: ViewAdvertComponent },
   { path: "adverts/campaign", component: CampaignComponent },
