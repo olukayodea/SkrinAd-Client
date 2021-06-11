@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
+import { Title, Meta } from '@angular/platform-browser';
 import { ApiService } from '../_services/api.service';
 
 @Component({
@@ -24,9 +25,17 @@ export class ForgotPasswordComponent implements OnInit {
   get email() { return this.loginForm.get('email'); }
 
   constructor(
+    private titleService: Title,
+    private meta: Meta,
     private fb: FormBuilder,
     private apiService: ApiService,
-  ) {}
+  ) {
+    this.titleService.setTitle("Login");
+    this.meta.addTags([
+      { name: 'deacription', content: "Reset SkrinAd Client account Password" },
+      { name: 'Keywords', content: "SkrinAd, CLients, Login,  non-intrusive, lifestyle, multimedia contents, get paid, advertistment, surveys, money, smart business decisions, Advertise, Advertise with us" },
+    ]);
+  }
 
   ngOnInit(): void {
   }
