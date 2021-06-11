@@ -3,6 +3,7 @@ export class ErrorCodes {
     "en" = {
       10001: "Please login to continue",
       20001: "Your new password has been set, you can now login now",
+      20002: "Your account has been created and a password has been sent to your email address",
       200001: "Your wallet deposit request has been completed and verified, we will deposit the funds to your wallet in a moment",
       200002: "Your wallet deposit request has been completed and we will verify and deposit the funds to your wallet in a moment",
       400001: "Your wallet deposit request has failed, no deposit will be made to your account at the moment, please try again",
