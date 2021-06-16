@@ -1,0 +1,602 @@
+<div class="hold-transition sidebar-mini layout-navbar-fixed layout-footer-fixed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <app-header></app-header>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <app-sidebar [page]="'surveys'" [subPage]="'manage'"></app-sidebar>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Surveys</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a [routerLink]="['/surveys']">Surveys</a></li>
+                            <li class="breadcrumb-item active">{{surveyData.title}}</li>
+                        </ol>
+                    </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="sticky-top mb-3">
+                                <!-- Profile Image -->
+                                <div class="card card-primary card-outline">
+                                    <div class="card-body box-profile">
+                                        <h3 class="profile-username text-center">{{surveyData.title}}</h3>
+                                        <p class="text-muted text-center">{{surveyData.caption}}</p>
+                                        <div class="alert alert-warning" role="alert" *ngIf="surveyData.status.new === true && (surveyData.qustions.data.length == 0)">
+                                            Go to the Questionaire setup tab, add questions to this survey to continue
+                                        </div>
+
+                                        <!-- form start -->
+                                        <form [formGroup]="extendForm" *ngIf="extend">
+                                            <div class="card-header">
+                                                <h3 class="card-title">
+                                                    Extend Survey Campaign
+                                                </h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="impression">Impressions<em>*</em></label>
+                                                    <input type="number" required [ngClass]="(impression.invalid && (impression.dirty || impression.touched)) ? 'form-control is-invalid' : (impression.valid)? 'form-control is-valid':'form-control'" formControlName="impression" id="impression" placeholder="Impressions" (keyup)="calculateImpression()" (change)="calculateImpression()">
+                                                    <div *ngIf="impression.invalid && (impression.dirty || impression.touched)" class="invalid-feedback">
+                                                        <div *ngIf="impression.errors.required">Impressions is required</div>
+                                                        <div *ngIf="impression.errors.min">Minimum Impression of 1000 not met</div>
+                                                        <div *ngIf="impression.errors.incorrect">Your wallet balance is not enough to make this purchase</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+
+                                            <div class="card-footer">
+                                                <button type="submit" [disabled]="!extendForm.valid || extendForm.pending || processing" (click)="onExtend()" class="btn btn-primary">{{extendButtonText}}</button>&nbsp;
+                                                <button type="button" (click)="doExtend(false)" class="btn btn-primary">Cancel</button>
+                                            </div>
+                                        </form>
+                                        <ul class="list-group list-group-unbordered mb-3">
+                                            <li class="list-group-item">
+                                                <b>Code</b> <a class="float-right">{{surveyData.code}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Linked Advert</b> <a class="float-right">{{surveyData.advert}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Progress</b> <a class="float-right">
+                                                    <span [class]="
+                                                    surveyData.statistics.surveyProgress < 65 ? 'badge bg-success' :
+                                                    surveyData.statistics.surveyProgress < 90 ? 'badge bg-warning' : 'badge bg-danger'">
+                                                        {{surveyData.statistics.surveyProgress}}%
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Landing URL</b> <a class="float-right" href="{{surveyData.url}}" target="_blank">
+                                                    {{getHostname(surveyData.url)}} <i class="fas fa-external-link-alt"></i></a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Collect Personal Data</b> <a class="float-right" [innerHTML]="surveyData.getPersonalData ? 'Yes':'No'"></a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Multiple Response</b> <a class="float-right" [innerHTML]="surveyData.multipleAnswers ? 'Yes':'No'"></a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Status</b> <a class="float-right">
+                                                    <span [class]="
+                                                    surveyData.status.new === true ? 'badge bg-primary' : 
+                                                    surveyData.status.pending === true ? 'badge bg-warning' : 
+                                                    surveyData.status.active === true ? 'badge bg-info' : 
+                                                    surveyData.status.inactive === true ? 'badge bg-secondary' : 
+                                                    surveyData.status.complete === true ? 'badge bg-success' : 
+                                                        'badge bg-danger'" [innerHTML]="
+                                                        surveyData.status.new === true ? 'New' : 
+                                                        surveyData.status.pending === true ? 'Pending' : 
+                                                        surveyData.status.active === true ? 'Active' : 
+                                                        surveyData.status.inactive === true ? 'In-Active' : 
+                                                        surveyData.status.complete === true ? 'Completed' : 
+                                                        'Deleted'">
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Payment</b> <a class="float-right">
+                                                    <span [class]="
+                                                    surveyData.payment_status.approved === true ? 'badge bg-success' : 
+                                                        'badge bg-danger'" [innerHTML]="
+                                                        surveyData.payment_status.approved === true ? 'Approved' : 
+                                                        'Not Approved'">
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Created</b> <a class="float-right">{{surveyData.created}}</a>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <b>Last Modified</b> <a class="float-right">{{surveyData.lastModified}}</a>
+                                            </li>
+                                        </ul>
+                    
+                                        <button *ngIf="(surveyData.payment_status.notApproved === true) && (surveyData.qustions.data.length > 0) && walletBalance >= 0" [disabled]='processing' data-toggle="modal" data-target="#modal-secondary" class="btn btn-primary btn-block"><b>Approve</b></button>
+                                        <button *ngIf="surveyData.payment_status.approved === true && surveyData.impression.used >= surveyData.impression.issued " [disabled]='processing' (click)='doExtend(true)' class="btn btn-primary btn-block"><b>Extend Campaign</b></button>
+                        
+                                        <button *ngIf="surveyData.payment_status.approved === true && surveyData.status.active === true" [disabled]='processing' data-toggle="modal" data-target="#modal-deactivate" class="btn btn-primary btn-block"><b>De-Activate</b></button>
+                                        <button *ngIf="surveyData.payment_status.approved === true && surveyData.status.inactive === true" [disabled]='processing' data-toggle="modal" data-target="#modal-activate" class="btn btn-primary btn-block"><b>Activate</b></button>
+                        
+                                        <button [disabled]='processing' data-toggle="modal" data-target="#modal-delete" class="btn btn-danger btn-block"><b>Delete</b></button>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+                            <div class="card card-primary card-outline">
+                                <img [hidden]='!loading' [class]="loading?'mx-auto d-block':''" src="assets/LoadingGIF/Rolling-1s-75px.gif">
+
+                                <!-- Default box -->
+                                <div [hidden]='loading'>
+                                    <div class="card-header">
+                                        <ul class="nav nav-pills">
+                                            <li class="nav-item"><a class="nav-link" [routerLink]="['/surveys']" [queryParams]="{back:true}" data-toggle="tab"><i class="fas fa-angle-double-left"></i></a></li>&nbsp;
+                                            <li class="nav-item"><a (click)="changeTab('details')" class="nav-link active" href="#activity" data-toggle="tab">Details</a></li>
+                                            <li class="nav-item"><a (click)="changeTab('question')" class="nav-link" href="#activity" data-toggle="tab">Questionaire</a></li>
+                                            <li *ngIf='surveyData.status.new === false && surveyData.status.deleted === false && surveyData.status.pending === false' class="nav-item"><a (click)="changeTab('stats')" class="nav-link" href="#timeline" data-toggle="tab">Statistics and Data</a></li>
+                                        </ul>
+                                    </div>
+                                    <div *ngIf="detailsTab === true" class="card-body p-0">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            General Details
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <dl>
+                                                            <dt>Categories</dt>
+                                                            <dd><span *ngFor="let category of surveyData.category;"><span class="badge bg-primary">{{category.title}}</span>&nbsp;</span></dd>
+                                                            <dt>Area</dt>
+                                                            <dd><span *ngFor="let areas of surveyData.areas;"><span class="badge bg-primary">{{areas}}</span>&nbsp;</span></dd>
+                                                            <dt>Available Date</dt>
+                                                            <dd><span *ngFor="let avail_date of surveyData.avail_date;"><span class="badge bg-primary">{{avail_date}}</span>&nbsp;</span></dd>
+                                                            <dt>Age Range</dt>
+                                                            <dd><span *ngFor="let age of surveyData.age;"><span class="badge bg-primary">{{age}}</span>&nbsp;</span></dd>
+                                                            <dt>Target Gender</dt>
+                                                            <dd><span *ngFor="let gender of surveyData.gender;"><span class="badge bg-primary">{{gender}}</span>&nbsp;</span></dd>
+                                                        </dl>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Impression
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p>
+                                                            <strong>Booked</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(surveyData.impression.issued)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Used</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(surveyData.impression.used)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Remaining</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(surveyData.impression.remaining)"></span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Finance
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p>
+                                                            <strong>Amount / Impression</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.finance.amtPerImp.currency.symbol + ' '+ numberWithCommas(surveyData.finance.amtPerImp.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Campaign Total</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.finance.campaignTotal.currency.symbol + ' '+ numberWithCommas(surveyData.finance.campaignTotal.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Wallet Balance</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.finance.wallet.currentBalance.currency.symbol + ' '+ numberWithCommas(surveyData.finance.wallet.currentBalance.amount)"></span>
+                                                        </p>
+                                                        <p *ngIf="surveyData.payment_status.notApproved === true">
+                                                            <strong>Balance after Payment</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.finance.wallet.newBalance.currency.symbol + ' '+ numberWithCommas(surveyData.finance.wallet.newBalance.amount)"></span>
+                                                        </p>
+                                                        <p *ngIf="surveyData.status.pending === true && (surveyData.qustions.data.length) && walletBalance < 0">
+                                                            <strong>Balance Due</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.finance.wallet.currentBalance.currency.symbol + ' '+ numberWithCommas(amountDue)"></span>
+                                                        </p>
+                                                        <a [routerLink]="['/wallet', surveyData.owner]" *ngIf="surveyData.status.pending === true && (surveyData.gallery | json)  != '[]' && walletBalance < 0" class="btn btn-primary btn-block"><b>Make Payment</b></a>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Owner
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <dl>
+                                                            <dt>Agency</dt>
+                                                            <dd>{{surveyData.owner.companyName}}</dd>
+                                                            <dt>Contact Name</dt>
+                                                            <dd>{{surveyData.owner.name}}</dd>
+                                                            <dt>Contact Email</dt>
+                                                            <dd>{{surveyData.owner.contactEmail}}</dd>
+                                                            <dt>Contact Phone</dt>
+                                                            <dd>{{surveyData.owner.contactPhone}}</dd>
+                                                        </dl>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card" *ngIf="(surveyData.subOwner | json)  != '[]'">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Sub Client
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <dl>
+                                                            <dt>Agency</dt>
+                                                            <dd>{{surveyData.subOwner.companyName}}</dd>
+                                                            <dt>Contact Name</dt>
+                                                            <dd>{{surveyData.subOwner.name}}</dd>
+                                                            <dt>Contact Email</dt>
+                                                            <dd>{{surveyData.subOwner.contactEmail}}</dd>
+                                                            <dt>Contact Phone</dt>
+                                                            <dd>{{surveyData.subOwner.contactPhone}}</dd>
+                                                        </dl>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="questionnaireTab === true" class="card-body p-0">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card" *ngIf="surveyData.qustions.data.length > 0">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Survey Questionaire
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body container p-0">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Title</th>
+                                                                    <th>Response Type</th>
+                                                                    <th>Minimum Selection</th>
+                                                                    <th>Allow Manual Input</th>
+                                                                    <th>&nbsp;</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let surveyRow of surveyData.qustions.data;">
+                                                                    <td>{{surveyRow.title}}</td>
+                                                                    <td><span [innerHTML]="surveyRow.response_type == 'text'? 'Text' : surveyRow.response_type == 'texsingle_selectiont'? 'Single Selection' : surveyRow.response_type == 'multi_selection'? 'Multiple Selection' : 'Scaling Questions (1 - 10)'"></span> </td>
+                                                                    <td>{{surveyRow.minimumSelection}}</td>
+                                                                    <td><span [innerHTML]="surveyRow.allowManualInput === true ? 'Yes' : 'No'"></span> </td>
+                                                                    <td><i class="fas fa-trash-alt"></i></td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>Title</th>
+                                                                    <th>Response Type</th>
+                                                                    <th>Minimum Selection</th>
+                                                                    <th>Allow Manual Input</th>
+                                                                    <th>&nbsp;</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Add Question
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <form [formGroup]="dataForm">
+                                                                    <div class="card-body">
+                                                                        <div class="form-group">
+                                                                            <label for="title">Title<em>*</em></label>
+                                                                            <input type="text" required [ngClass]="(title.invalid && (title.dirty || title.touched)) ? 'form-control is-invalid' : (title.valid)? 'form-control is-valid':'form-control'" formControlName="title" id="title" placeholder="Qustion Title">
+                                                                            <div *ngIf="title.invalid && (title.dirty || title.touched)" class="invalid-feedback">
+                                                                                <div *ngIf="title.errors.required">Question title is required</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="response_type">Response Type</label>
+                                                                            <select required [ngClass]="(response_type.invalid && (response_type.dirty || response_type.touched)) ? 'form-control is-invalid' : (response_type.valid)? 'form-control is-valid':'form-control'" formControlName="response_type" id="response_type" (change)="responseTypeSelector()">
+                                                                                <option value="">Select One</option>
+                                                                                <option value="text">Text</option>
+                                                                                <option value="single_selection">Single Selection</option>
+                                                                                <option value="multi_selection">Multi Selection</option>
+                                                                                <option value="scaling">Scaling Questions (1 - 10)</option>
+                                                                            </select>
+                                                                            <div *ngIf="response_type.invalid && (response_type.dirty || response_type.touched)" class="invalid-feedback">
+                                                                                <div *ngIf="response_type.errors.required">A response type is required</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="response_type">Response Data</label>
+                                                                            <div class="row">
+                                                                                <div class="col-9">
+                                                                                    <input type="text" id="data_label" formControlName="data_label" placeholder="Response Data Entry" [ngClass]="(dataLabelError === true) ? 'form-control is-invalid' : (dataLabelError === false)? 'form-control is-valid':'form-control'" (change)="detectChange()">
+                                                                                    <div *ngIf="dataLabelError === true" class="invalid-feedback">Please enter a property Label.</div>
+                                                                                </div>
+                                                                                <div class="col">
+                                                                                    <button type="submit" (click)="addData()" class="btn btn-primary" [disabled]="!addResponseData" >Add Response </button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div *ngIf="response_type.invalid && (response_type.dirty || response_type.touched)" class="invalid-feedback">
+                                                                                <div *ngIf="response_type.errors.required">A response type is required</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                        <div class="form-group">
+                                                                            <label for="min_selection">Minimum Selection</label>
+                                                                            <select required [ngClass]="(min_selection.invalid && (min_selection.dirty || min_selection.touched)) ? 'form-control is-invalid' : (min_selection.valid)? 'form-control is-valid':'form-control'" formControlName="min_selection" id="min_selection">
+                                                                                <option value="">Select One</option>
+                                                                                <option value="1">1</option>
+                                                                                <option value="2">2</option>
+                                                                                <option value="3">3</option>
+                                                                            </select>
+                                                                            <div *ngIf="min_selection.invalid && (min_selection.dirty || min_selection.touched)" class="invalid-feedback">
+                                                                                <div *ngIf="min_selection.errors.required">A response is required</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="allow_manual_data">Allow Manual Input</label>
+                                                                            <select required [ngClass]="(allow_manual_data.invalid && (allow_manual_data.dirty || allow_manual_data.touched)) ? 'form-control is-invalid' : (allow_manual_data.valid)? 'form-control is-valid':'form-control'" formControlName="allow_manual_data" id="allow_manual_data">
+                                                                                <option value="">Select One</option>
+                                                                                <option value="0">No</option>
+                                                                                <option value="1">Yes</option>
+                                                                            </select>
+                                                                            <div *ngIf="allow_manual_data.invalid && (allow_manual_data.dirty || allow_manual_data.touched)" class="invalid-feedback">
+                                                                                <div *ngIf="allow_manual_data.errors.required">A response is required</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- /.card-body -->
+
+                                                                    <div class="card-footer">
+                                                                        <button type="submit" [disabled]="!dataForm.valid || dataForm.pending || processing" (click)="onAddQuestion()" class="btn btn-primary">{{buttonText}}</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <ul class="list-group list-group-flush">
+                                                                    <li class="list-group-item" *ngFor="let data of response_data.controls;let i=index;">{{data['controls'].response_data_value.value}} <span class="float-right"><i class="fas fa-trash-alt" (click)="removeData(i)"></i></span></li>
+                                                                  </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="statTab === true" class="card-body p-0">
+                                        <app-map-survey [statistics]='surveyData.statistics'></app-map-survey>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Impressions
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p>
+                                                            <strong>Assigned</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(surveyData.statistics.impression.assigned)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Used</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(surveyData.statistics.impression.used)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Un-Used</strong>
+                                                            <span class="float-right" [innerHTML]="numberWithCommas(surveyData.statistics.impression.unused)"></span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">
+                                                            <i class="fas fa-text-width"></i>
+                                                            Budget
+                                                        </h3>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <p>
+                                                            <strong>Used</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.statistics.budget.used.currency.symbol + ' '+ numberWithCommas(surveyData.statistics.budget.used.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Unused</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.statistics.budget.unused.currency.symbol + ' '+ numberWithCommas(surveyData.statistics.budget.unused.amount)"></span>
+                                                        </p>
+                                                        <p>
+                                                            <strong>Total</strong>
+                                                            <span class="float-right" [innerHTML]="surveyData.statistics.budget.total.currency.symbol + ' '+ numberWithCommas(surveyData.statistics.budget.total.amount)"></span>
+                                                        </p>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+            <!-- /.content-wrapper -->
+
+        </div>
+        <!-- /.content-wrapper -->
+        <app-footer></app-footer>
+    </div>
+    <!-- ./wrapper -->
+</div>
+<div class="modal fade" id="modal-secondary">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Approve Survey</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will activate this survey and ' + surveyData.finance.campaignTotal.currency.symbol + numberWithCommas(surveyData.finance.campaignTotal.amount) + ' will be billed to the ' + surveyData.owner.companyName + ' account. Are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" (click)="changeSurveyStatus('approve')" class="btn btn-outline-light">Approve Survey</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div class="modal fade" id="modal-activate">
+  <div class="modal-dialog">
+    <div class="modal-content bg-secondary">
+      <div class="modal-header">
+        <h4 class="modal-title">Activate Survey</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p [innerHTML]="'This action will activate this survey. Are you sure you want to continue ?'"></p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+        <button type="button" (click)="changeSurveyStatus('activate')" class="btn btn-outline-light">Activate Survey</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div class="modal fade" id="modal-deactivate">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Deactivate Survey</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will deactivate this survey. Are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" (click)="changeSurveyStatus('deactivate')" class="btn btn-outline-light">Deactivate Survey</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+  <!-- /.modal -->
+<div class="modal fade" id="modal-delete">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Survey</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will remove this survey. This action is not reversable, are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline-light" (click)="deleteSurvey()">Delete Survey</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+  <!-- /.modal -->

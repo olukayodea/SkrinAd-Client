@@ -25,6 +25,10 @@ import { WalletComponent } from './wallet/wallet.component';
 import { MapComponent } from './common/widget/map/map.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { ListCampaignComponent } from './surveys/list-campaign/list-campaign.component';
+import { SurveysComponent } from './surveys/surveys.component';
+import { ViewSurveyComponent } from './surveys/view-survey/view-survey.component';
+import { MapSurveyComponent } from './common/widget/map-survey/map-survey.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +48,11 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     WalletComponent,
     MapComponent,
     ForgotPasswordComponent,
-    SignUpComponent
+    SignUpComponent,
+    ListCampaignComponent,
+    SurveysComponent,
+    ViewSurveyComponent,
+    MapSurveyComponent
   ],
   imports: [
     BrowserModule,

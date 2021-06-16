@@ -1,0 +1,136 @@
+<div class="hold-transition sidebar-mini layout-navbar-fixed layout-footer-fixed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <app-header></app-header>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <app-sidebar [page]="'surveys'" [subPage]="'campaign'"></app-sidebar>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Surveys</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a [routerLink]="'/surveys'">Surveys</a></li>
+                            <li class="breadcrumb-item active">Running Campaign</li>
+                        </ol>
+                    </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- /.col -->
+                        <div class="col-md-12">
+                            <div class="card card-primary card-outline">
+                                <img [hidden]='!loading' [class]="loading?'mx-auto d-block':''" src="assets/LoadingGIF/Rolling-1s-75px.gif">
+
+                                <!-- Default box -->
+                                <div class="card card-solid" [hidden]='loading'>
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-edit"></i>
+                                            Running Campaign
+                                              <!-- /.card-tools -->
+                                        </h3>
+                                        <div class="text-right"> 
+                                            <div class="btn-group">
+                                                <div class="input-group-sm">
+                                                    <input type="text" class="form-control" placeholder="Search Mail">
+                                                </div>
+                                                <button [routerLink]="['/surveys/Deleted']" class="btn btn-primary btn-sm" type="button"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body table-responsive p-0">
+                                        <table class="table table-hover text-nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Client</th>
+                                                    <th>Progress</th>
+                                                    <th>Status</th>
+                                                    <th>Created</th>
+                                                    <th>Last Modified</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let advertRow of surveyList;">
+                                                    <td *ngIf="advertRow.status.deleted === false"><a [routerLink]="['/surveys/view', advertRow.ref]"> {{advertRow.title}}</a></td>
+                                                    <td *ngIf="advertRow.status.deleted === true">{{advertRow.title}}</td>
+                                                    <td>{{advertRow.owner.companyName}}</td>
+                                                    <td>
+                                                        <span [class]="
+                                                            advertRow.statistics.surveyProgress < 65 ? 'badge bg-success' :
+                                                            advertRow.statistics.surveyProgress < 90 ? 'badge bg-warning' : 'badge bg-danger'">
+                                                            {{advertRow.statistics.surveyProgress}}%
+                                                        </span>
+                                                    </td>
+                                                    <td><span [class]="
+                                                        advertRow.status.new === true ? 'badge bg-primary' : 
+                                                        advertRow.status.pending === true ? 'badge bg-warning' : 
+                                                        advertRow.status.active === true ? 'badge bg-info' : 
+                                                        advertRow.status.inactive === true ? 'badge bg-secondary' : 
+                                                        advertRow.status.complete === true ? 'badge bg-success' : 
+                                                        'badge bg-danger'" [innerHTML]="
+                                                        advertRow.status.new === true ? 'New' : 
+                                                        advertRow.status.pending === true ? 'Pending' : 
+                                                        advertRow.status.active === true ? 'Active' : 
+                                                        advertRow.status.inactive === true ? 'In-Active' : 
+                                                        advertRow.status.complete === true ? 'Completed' : 
+                                                        'Deleted'"></span></td>
+                                                    <td>{{advertRow.created}}</td>
+                                                    <td>{{advertRow.lastModified}}</td>
+                                                </tr>
+                                                <tr *ngIf="surveyList.length == 0">
+                                                    <td colspan="5" class="text-center">No record to show</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Client</th>
+                                                    <th>Progress</th>
+                                                    <th>Status</th>
+                                                    <th>Created</th>
+                                                    <th>Last Modified</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer" *ngIf="surveyList.length > 0">
+                                        <app-pagination [url]='pageUrl' [counts]='count'(refresh)="getSurvey($event)"></app-pagination>
+                                    </div>
+                                    <!-- /.card-footer -->
+                                </div>
+                            </div>
+                        <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+            <!-- /.content-wrapper -->
+
+        </div>
+        <!-- /.content-wrapper -->
+        <app-footer></app-footer>
+    </div>
+    <!-- ./wrapper -->
+</div>

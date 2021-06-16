@@ -8,6 +8,7 @@ import { PasswordData, User } from '../_models/users';
 import { Adverts, AllAdvertData, OneAdvert } from '../_models/advert';
 import { OneWallet, Wallet } from '../_models/wallet';
 import { Dashboard } from '../_models/homePage';
+import { AllSurveyData, OneSurvey, Survery } from '../_models/surveys';
 
 
 @Injectable({
@@ -163,6 +164,23 @@ export class ApiService {
     return responseData;
   }
 
+  getOneSurvey(id:number): Observable<OneSurvey> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.get(this.baseUrl + 'survey/get/'+id, httpOptions);
+
+    return responseData;
+  }
+
   getOneAdvert(id:number): Observable<OneAdvert> {
     var token = this.checkService.getToken();
     var gateway_passcode = btoa(this.product_key + "_" + token);
@@ -197,7 +215,7 @@ export class ApiService {
     return responseData;
   }
 
-  getRuningAdverts(page:number): Observable<Adverts> {
+  getRuningSurvey(page:number): Observable<Survery> {
     var token = this.checkService.getToken();
     var gateway_passcode = btoa(this.product_key + "_" + token);
 
@@ -209,7 +227,46 @@ export class ApiService {
         'key': this.product_key.toString()
       })
     }
-    const responseData = this.get(this.baseUrl + 'content/get/running?page='+page, httpOptions);
+    const responseData = this.get(this.baseUrl + 'survey/get/running?page='+page, httpOptions);
+
+    return responseData;
+  }
+
+  getRuningAdverts(page:number, list=false): Observable<Adverts> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+
+    let tag = 'running';
+    if (list === true) {
+      tag = 'list';
+    }
+    const responseData = this.get(this.baseUrl + 'content/get/'+tag+'?page='+page, httpOptions);
+
+    return responseData;
+  }
+
+  getSurvey(page:number, view:string): Observable<Survery> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.get(this.baseUrl + 'survey/get/'+view+'?page='+page, httpOptions);
 
     return responseData;
   }
@@ -265,6 +322,23 @@ export class ApiService {
     return responseData;
   }
 
+  getSurveyData(): Observable<AllSurveyData> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.get(this.baseUrl + 'survey/getData', httpOptions);
+
+    return responseData;
+  }
+
   modifyPassword(data): Observable<User> {
     var token = this.checkService.getToken();
     var gateway_passcode = btoa(this.product_key + "_" + token);
@@ -316,6 +390,58 @@ export class ApiService {
     return responseData;
   }
 
+  addQuestion(data): Observable<OneSurvey> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.post(this.baseUrl + 'survey/add', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
+  createSurvey(data): Observable<OneSurvey> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.post(this.baseUrl + 'survey/create', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
+  extendSurvey(data): Observable<OneSurvey> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+
+    const responseData = this.put(this.baseUrl + 'content/extend', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
   extendAdvert(data): Observable<OneAdvert> {
     var token = this.checkService.getToken();
     var gateway_passcode = btoa(this.product_key + "_" + token);
@@ -330,6 +456,24 @@ export class ApiService {
     }
 
     const responseData = this.put(this.baseUrl + 'content/extend', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
+  editSurvey(data): Observable<OneSurvey> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+
+    const responseData = this.put(this.baseUrl + 'survey/edit', JSON.stringify(data), httpOptions);
 
     return responseData;
   }
@@ -351,6 +495,24 @@ export class ApiService {
     return responseData;
   }
 
+  changeSurveyStatus(data): Observable<OneSurvey> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    
+    const responseData = this.put(this.baseUrl + 'survey/changeStatus', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
   changeAdvertStatus(data): Observable<OneAdvert> {
     var token = this.checkService.getToken();
     var gateway_passcode = btoa(this.product_key + "_" + token);
@@ -364,6 +526,23 @@ export class ApiService {
       })
     }
     const responseData = this.put(this.baseUrl + 'content/changeStatus', JSON.stringify(data), httpOptions);
+
+    return responseData;
+  }
+
+  deleteSurvey(ref): Observable<OneSurvey> {
+    var token = this.checkService.getToken();
+    var gateway_passcode = btoa(this.product_key + "_" + token);
+
+    // request headers
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gateway_passcode,
+        'key': this.product_key.toString()
+      })
+    }
+    const responseData = this.delete(this.baseUrl + 'survey/remove/'+ref, httpOptions);
 
     return responseData;
   }

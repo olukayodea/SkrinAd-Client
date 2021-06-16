@@ -106,3 +106,39 @@ export class CategoryData {
         this.status = new MainStatus();
     }
 }
+
+export class ContentStatus {
+    new: boolean;
+    pending: boolean;
+    active: boolean;
+    inactive: boolean;
+    deleted: boolean;
+    complete: boolean;
+}
+
+export class PaymentStatus {
+    approved: boolean;
+    notApproved: boolean;
+}
+
+export class Finance {
+    amtPerImp: FinanceData;
+    campaignTotal: FinanceData;
+    wallet: ContentWalletData;
+
+    constructor() {
+        this.amtPerImp = new FinanceData();
+        this.campaignTotal = new FinanceData();
+        this.wallet = new ContentWalletData();
+    }
+}
+
+export class ContentWalletData {
+    currentBalance: FinanceData;
+    newBalance: FinanceData;
+
+    constructor() {
+        this.currentBalance = new FinanceData();
+        this.newBalance = new FinanceData();
+    }
+}

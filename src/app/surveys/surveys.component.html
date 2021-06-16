@@ -1,0 +1,382 @@
+<div class="hold-transition sidebar-mini layout-navbar-fixed layout-footer-fixed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <app-header></app-header>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <app-sidebar [page]="'surveys'" [subPage]="'manage'"></app-sidebar>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Surveys</h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Surveys</li>
+                        </ol>
+                    </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="sticky-top mb-3">
+                                <div class="card card-primary card-outline">
+                                    <div class="card-header">
+                                        <h4 class="card-title">{{formHeader}}</h4>
+                                    </div>
+                                    <!-- form start -->
+                                    <form [formGroup]="dataForm">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="title">Title<em>*</em></label>
+                                                <input type="text" required [ngClass]="(title.invalid && (title.dirty || title.touched)) ? 'form-control is-invalid' : (title.valid)? 'form-control is-valid':'form-control'" formControlName="title" id="title" placeholder="Title">
+                                                <div *ngIf="title.invalid && (title.dirty || title.touched)" class="invalid-feedback">
+                                                    <div *ngIf="title.errors.required">Title is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="caption">Caption<em>*</em></label>
+                                                <input type="text" required [ngClass]="(caption.invalid && (caption.dirty || caption.touched)) ? 'form-control is-invalid' : (caption.valid)? 'form-control is-valid':'form-control'" formControlName="caption" id="caption" placeholder="Caption">
+                                                <div *ngIf="caption.invalid && (caption.dirty || caption.touched)" class="invalid-feedback">
+                                                    <div *ngIf="caption.errors.required">Caption is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="advert">Link Advert</label>
+                                                <select required [ngClass]="(advert.invalid && (advert.dirty || advert.touched)) ? 'form-control is-invalid' : (advert.valid)? 'form-control is-valid':'form-control'" formControlName="advert" id="advert">
+                                                    <option value="">Select One</option>
+                                                    <option value="0">No Thanks</option>
+                                                    <option value="{{adData.ref}}" *ngFor="let adData of advertList">{{adData.title}}</option>
+                                                </select>
+                                                <div *ngIf="advert.invalid && (advert.dirty || advert.touched)" class="invalid-feedback">
+                                                    <div *ngIf="advert.errors.required">Select Advert linkage option</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="budget">Budget<em>*</em></label>
+                                                <input type="number" required [ngClass]="(budget.invalid && (budget.dirty || budget.touched)) ? 'form-control is-invalid' : (budget.valid)? 'form-control is-valid':'form-control'" formControlName="budget" id="budget" placeholder="Impressions" (change)='calculateFee()' (keyup)='calculateFee()'>
+                                                <div *ngIf="budget.invalid && (budget.dirty || budget.touched)" class="invalid-feedback">
+                                                    <div *ngIf="budget.errors.required">Budget is required</div>
+                                                    <div *ngIf="budget.errors.min">Minimum Budget of {{min_survey_budget}} not met</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="impression">Impressions<em>*</em></label>
+                                                <input type="number" required [ngClass]="(impression.invalid && (impression.dirty || impression.touched)) ? 'form-control is-invalid' : (impression.valid)? 'form-control is-valid':'form-control'" formControlName="impression" id="impression" placeholder="Impressions" (change)='calculateFee()' (keyup)='calculateFee()'>
+                                                <div *ngIf="impression.invalid && (impression.dirty || impression.touched)" class="invalid-feedback">
+                                                    <div *ngIf="impression.errors.required">Impressions is required</div>
+                                                    <div *ngIf="impression.errors.min">Minimum Impression of {{min_imp}} not met</div>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-danger" role="alert" *ngIf="!submitActive">
+                                                <span [innerHTML]="submitActiveData" ></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="category">Category<em>*</em></label>
+                                                <select required [ngClass]="(category.invalid && (category.dirty || category.touched)) ? 'form-control is-invalid' : (category.valid)? 'form-control is-valid':'form-control'" formControlName="category" id="category" placeholder="Category" multiple>
+                                                    <option *ngFor="let categoryRow of categoryList;" value="{{categoryRow.ref}}">{{categoryRow.title}}</option>
+                                                </select>
+                                                <div *ngIf="category.invalid && (category.dirty || category.touched)" class="invalid-feedback">
+                                                    <div *ngIf="category.errors.required">Category is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="avail_date">Available Days<em>*</em></label>
+                                                <select [ngClass]="(avail_date.invalid && (avail_date.dirty || avail_date.touched)) ? 'form-control is-invalid' : (avail_date.valid)? 'form-control is-valid':'form-control'" formControlName="avail_date" id="avail_date" multiple>
+                                                    <option value="Sun">Sunday</option>
+                                                    <option value="Mon">Monday</option>
+                                                    <option value="Tue">Tuesday</option>
+                                                    <option value="Wed">Wednesday</option>
+                                                    <option value="Thu">Thursday</option>
+                                                    <option value="Fri">Friday</option>
+                                                    <option value="Sat">Saturday</option>
+                                                </select>
+                                                <div *ngIf="avail_date.invalid && (avail_date.dirty || avail_date.touched)" class="invalid-feedback">
+                                                    <div *ngIf="avail_date.errors.required">Available Days is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="age">Age Range<em>*</em></label>
+                                                <select [ngClass]="(age.invalid && (age.dirty || age.touched)) ? 'form-control is-invalid' : (age.valid)? 'form-control is-valid':'form-control'" formControlName="age" id="age" multiple>
+                                                    <option value="0-10">0-10</option>
+                                                    <option value="11-17">11-17</option>
+                                                    <option value="18-35">18-35</option>
+                                                    <option value="36-65">36-65</option>
+                                                    <option value="65+">65+</option>
+                                                </select>
+                                                <div *ngIf="age.invalid && (age.dirty || age.touched)" class="invalid-feedback">
+                                                    <div *ngIf="age.errors.required">Age Range is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="gender">Gender<em>*</em></label>
+                                                <select [ngClass]="(gender.invalid && (gender.dirty || gender.touched)) ? 'form-control is-invalid' : (gender.valid)? 'form-control is-valid':'form-control'" formControlName="gender" id="gender" multiple>
+                                                    <option value="female">female</option>
+                                                    <option value="Male">Male</option>
+                                                </select>
+                                                <div *ngIf="gender.invalid && (gender.dirty || gender.touched)" class="invalid-feedback">
+                                                    <div *ngIf="gender.errors.required">Gender is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="areas">Prefered Location</label>
+                                                <select required [ngClass]="(areas.invalid && (areas.dirty || areas.touched)) ? 'form-control is-invalid' : (areas.valid)? 'form-control is-valid':'form-control'" formControlName="areas" id="areas" multiple>
+                                                    <option value="All">All Areas</option>
+                                                    <option *ngFor="let areaRow of areaList;" value="{{areaRow.state}}">{{areaRow.state}}</option>
+                                                </select>
+                                                <div *ngIf="areas.invalid && (areas.dirty || areas.touched)" class="invalid-feedback">
+                                                    <div *ngIf="areas.errors.required">Prefered Location is required</div>
+                                                </div>
+                                                <small>if &quot;All&quot; is selected, all other selection is ignored</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="request_personal_data">Get Personal Data</label>
+                                                <select required [ngClass]="(request_personal_data.invalid && (request_personal_data.dirty || request_personal_data.touched)) ? 'form-control is-invalid' : (request_personal_data.valid)? 'form-control is-valid':'form-control'" formControlName="request_personal_data" id="request_personal_data" (change)="calculateFee()">
+                                                    <option value="">Select One</option>
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                                <div *ngIf="request_personal_data.invalid && (request_personal_data.dirty || request_personal_data.touched)" class="invalid-feedback">
+                                                    <div *ngIf="request_personal_data.errors.required">Prefered Location is required</div>
+                                                </div>
+                                                <div class="alert alert-warning" role="alert" *ngIf="personalData">
+                                                    <span [innerHTML]="personalDataMsg" ></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="multiple">Allow Multiple Response</label>
+                                                <select required [ngClass]="(multiple.invalid && (multiple.dirty || multiple.touched)) ? 'form-control is-invalid' : (multiple.valid)? 'form-control is-valid':'form-control'" formControlName="multiple" id="multiple">
+                                                    <option value="">Select One</option>
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                                <div *ngIf="multiple.invalid && (multiple.dirty || multiple.touched)" class="invalid-feedback">
+                                                    <div *ngIf="multiple.errors.required">Do you want a single user take the survey multiple times?</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+
+                                        <div class="card-footer">
+                                            <input type="hidden" formControlName="ref" id="ref">
+                                            <button type="submit" [disabled]="!dataForm.valid || dataForm.pending || processing || !submitActive" (click)="onCreate()" class="btn btn-primary">{{buttonText}}</button>&nbsp;
+                                            <button type="button" [hidden]="!edit" (click)="onCancel()" class="btn btn-primary">Cancel</button>
+                                        </div>
+                                    </form>
+                                <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+                            <div class="card card-primary card-outline">
+                                <img [hidden]='!loading' [class]="loading?'mx-auto d-block':''" src="assets/LoadingGIF/Rolling-1s-75px.gif">
+
+                                <!-- Default box -->
+                                <div class="card card-solid" [hidden]='loading'>
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-edit"></i>
+                                            {{mainHeader}}
+                                              <!-- /.card-tools -->
+                                        </h3>
+                                        <div class="text-right"> 
+                                            <div class="btn-group">
+                                                <a [routerLink]="['/surveys']" class="btn btn-primary btn-sm" type="button">All</a>&nbsp;
+                                                <a [routerLink]="['/surveys/New']" class="btn btn-primary btn-sm" type="button">New</a>&nbsp;
+                                                <a [routerLink]="['/surveys/Pending']" class="btn btn-primary btn-sm" type="button">Pending</a>&nbsp;
+                                                <a [routerLink]="['/surveys/Active']" class="btn btn-primary btn-sm" type="button">Active</a>&nbsp;
+                                                <a [routerLink]="['/surveys/Inactive']" class="btn btn-primary btn-sm" type="button">In-Active</a>&nbsp;
+                                                <a [routerLink]="['/surveys/Completed']" class="btn btn-primary btn-sm" type="button">Completed</a>&nbsp;
+                                                <a [routerLink]="['/surveys/Deleted']" class="btn btn-primary btn-sm" type="button">Archived</a>&nbsp;
+                                                <div class="input-group-sm">
+                                                    <input type="text" class="form-control" placeholder="Search Mail">
+                                                </div>
+                                                <button [routerLink]="['/surveys/Deleted']" class="btn btn-primary btn-sm" type="button"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body table-responsive p-0">
+                                        <table class="table table-hover text-nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Client</th>
+                                                    <th>Progress</th>
+                                                    <th>Status</th>
+                                                    <th>Created</th>
+                                                    <th>Last Modified</th>
+                                                    <th>&nbsp;</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let surveyRow of surveyList;">
+                                                    <td *ngIf="surveyRow.status.deleted === false"><a [routerLink]="['/surveys/view', surveyRow.ref]"> {{surveyRow.title}}</a></td>
+                                                    <td *ngIf="surveyRow.status.deleted === true">{{surveyRow.title}}</td>
+                                                    <td>{{surveyRow.owner.companyName}}</td>
+                                                    <td>
+                                                        <span [class]="
+                                                            surveyRow.statistics.surveyProgress < 65 ? 'badge bg-success' :
+                                                            surveyRow.statistics.surveyProgress < 90 ? 'badge bg-warning' : 'badge bg-danger'">
+                                                            {{surveyRow.statistics.surveyProgress}}%
+                                                        </span>
+                                                    </td>
+                                                    <td><span [class]="
+                                                        surveyRow.status.new === true ? 'badge bg-primary' : 
+                                                        surveyRow.status.pending === true ? 'badge bg-warning' : 
+                                                        surveyRow.status.active === true ? 'badge bg-info' : 
+                                                        surveyRow.status.inactive === true ? 'badge bg-secondary' : 
+                                                        surveyRow.status.complete === true ? 'badge bg-success' : 
+                                                        'badge bg-danger'" [innerHTML]="
+                                                        surveyRow.status.new === true ? 'New' : 
+                                                        surveyRow.status.pending === true ? 'Pending' : 
+                                                        surveyRow.status.active === true ? 'Active' : 
+                                                        surveyRow.status.inactive === true ? 'In-Active' : 
+                                                        surveyRow.status.complete === true ? 'Completed' : 
+                                                        'Deleted'"></span></td>
+                                                    <td>{{surveyRow.created}}</td>
+                                                    <td>{{surveyRow.lastModified}}</td>
+                                                    <td *ngIf="surveyRow.status.deleted === false">
+                                                        <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">Manage
+                                                        </button>
+                                                        <div class="dropdown-menu" role="menu">
+                                                            <a class="dropdown-item" [routerLink]="" (click)='getEdit(surveyRow)'><i class="fas fa-edit"></i>  Edit</a>
+                                                            <a class="dropdown-item" [routerLink]="['/surveys/view', surveyRow.ref]"><i class="fas fa-list"></i>  View Details</a>
+                                                            <span *ngIf="surveyRow.status.active === true">
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modal-deactivate" (click)="getDataFromSurvey(surveyRow.title, surveyRow.ref)">
+                                                                    <i class="fas fa-power-off" style="color: #A00;"></i> Deactivate
+                                                                </a>
+                                                            </span>
+                                                            <span *ngIf="surveyRow.status.inactive === true">
+                                                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modal-activate" (click)="getDataFromSurvey(surveyRow.title, surveyRow.ref)">
+                                                                    <i class="fas fa-power-off" style="color: #0A0;"></i> Activate
+                                                                </a>
+                                                            </span>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#modal-delete" (click)="getDataFromSurvey(surveyRow.title, surveyRow.ref)"><i class="fas fa-trash-alt"></i>  Remove</a>
+                                                        </div>
+                                                    </td>
+                                                    <td *ngIf="surveyRow.status.deleted === true"></td>
+                                                </tr>
+                                                <tr *ngIf="surveyList.length == 0">
+                                                    <td colspan="6" class="text-center">No record to show</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Client</th>
+                                                    <th>Progress</th>
+                                                    <th>Status</th>
+                                                    <th>Created</th>
+                                                    <th>Last Modified</th>
+                                                    <th>&nbsp;</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer" *ngIf="surveyList.length > 0">
+                                        <app-pagination [url]='pageUrl' [counts]='count'(refresh)="getSurveys($event)"></app-pagination>
+                                    </div>
+                                    <!-- /.card-footer -->
+                                </div>
+                            </div>
+                        <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+            <!-- /.content-wrapper -->
+
+        </div>
+        <!-- /.content-wrapper -->
+        <app-footer></app-footer>
+    </div>
+    <!-- ./wrapper -->
+</div>
+
+<div class="modal fade" id="modal-activate">
+    <div class="modal-dialog">
+      <div class="modal-content bg-secondary">
+        <div class="modal-header">
+          <h4 class="modal-title">Activate Survey</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="'This action will activate '+surveyName+'. Are you sure you want to continue ?'"></p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+          <button type="button" (click)="changeSurveyStatus('activate', surveyRef)" class="btn btn-outline-light">Activate Survey</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div class="modal fade" id="modal-deactivate">
+      <div class="modal-dialog">
+        <div class="modal-content bg-secondary">
+          <div class="modal-header">
+            <h4 class="modal-title">Deactivate Survey</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p [innerHTML]="'This action will deactivate '+surveyName+'. Are you sure you want to continue ?'"></p>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+            <button type="button" (click)="changeSurveyStatus('deactivate', surveyRef)" class="btn btn-outline-light">Deactivate Survey</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<div class="modal fade" id="modal-delete">
+      <div class="modal-dialog">
+        <div class="modal-content bg-secondary">
+          <div class="modal-header">
+            <h4 class="modal-title">Delete Survey</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p [innerHTML]="'This action will remove '+surveyName+'. This action is not reversable, are you sure you want to continue ?'"></p>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-outline-light" (click)="deleteSurvey(surveyRef)">Delete Survey</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+ </div>
+<!-- /.modal -->

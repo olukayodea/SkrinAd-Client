@@ -10,6 +10,9 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { ListCampaignComponent } from './surveys/list-campaign/list-campaign.component';
+import { SurveysComponent } from './surveys/surveys.component';
+import { ViewSurveyComponent } from './surveys/view-survey/view-survey.component';
 import { WalletComponent } from './wallet/wallet.component';
 
 const routes: Routes = [
@@ -27,6 +30,11 @@ const routes: Routes = [
   { path: "adverts/campaign", component: CampaignComponent },
   { path: "adverts/:view", component: AdvertsComponent },
   { path: "adverts", component: AdvertsComponent },
+
+  { path: "surveys/view/:id", component: ViewSurveyComponent },
+  { path: "surveys/campaign", component: ListCampaignComponent },
+  { path: "surveys/:view", component: SurveysComponent },
+  { path: "surveys", component: SurveysComponent },
 
   { path: "profile/:id", component: ProfileComponent },
   { path: "profile", component: ProfileComponent },

@@ -52,6 +52,12 @@ export class AdvertsData {
     }
 }
 
+export class MiniAdvert {
+    ref: number;
+    title: string;
+    caption: string;
+}
+
 export class AdvertStatistics {
     advertProgress: number;
     impression: StatImpression;

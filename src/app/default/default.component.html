@@ -179,13 +179,13 @@
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let surveyRow of surveyList;">
-                                                    <td><a [routerLink]="['/adverts/view', surveyRow.ref]"> {{surveyRow.title}}</a></td>
+                                                    <td><a [routerLink]="['/surveys/view', surveyRow.ref]"> {{surveyRow.title}}</a></td>
                                                     <td>{{surveyRow.owner.companyName}}</td>
                                                     <td>
                                                         <span [class]="
-                                                        surveyRow.statistics.advertProgress < 65 ? 'badge bg-success' :
-                                                        surveyRow.statistics.advertProgress < 90 ? 'badge bg-warning' : 'badge bg-danger'">
-                                                            {{surveyRow.statistics.advertProgress}}%
+                                                        surveyRow.statistics.surveyProgress < 65 ? 'badge bg-success' :
+                                                        surveyRow.statistics.surveyProgress < 90 ? 'badge bg-warning' : 'badge bg-danger'">
+                                                            {{surveyRow.statistics.surveyProgress}}%
                                                         </span>
                                                     </td>
                                                 </tr>
