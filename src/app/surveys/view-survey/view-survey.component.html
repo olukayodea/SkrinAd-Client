@@ -322,7 +322,7 @@
                                                             <tbody>
                                                                 <tr *ngFor="let surveyRow of surveyData.qustions.data;">
                                                                     <td>{{surveyRow.title}}</td>
-                                                                    <td><span [innerHTML]="surveyRow.response_type == 'text'? 'Text' : surveyRow.response_type == 'texsingle_selectiont'? 'Single Selection' : surveyRow.response_type == 'multi_selection'? 'Multiple Selection' : 'Scaling Questions (1 - 10)'"></span> </td>
+                                                                    <td><span [innerHTML]="surveyRow.response_type == 'text'? 'Text' : surveyRow.response_type == 'texsingle_selectiont'? 'Single Selection' : surveyRow.response_type == 'multi_selection'? 'Multiple Selection' : 'Scaling Questions (1 - 5)'"></span> </td>
                                                                     <td>{{surveyRow.minimumSelection}}</td>
                                                                     <td><span [innerHTML]="surveyRow.allowManualInput === true ? 'Yes' : 'No'"></span> </td>
                                                                     <td><i class="fas fa-trash-alt"></i></td>
@@ -369,7 +369,7 @@
                                                                                 <option value="text">Text</option>
                                                                                 <option value="single_selection">Single Selection</option>
                                                                                 <option value="multi_selection">Multi Selection</option>
-                                                                                <option value="scaling">Scaling Questions (1 - 10)</option>
+                                                                                <option value="scaling">Scaling Questions (1 - 5)</option>
                                                                             </select>
                                                                             <div *ngIf="response_type.invalid && (response_type.dirty || response_type.touched)" class="invalid-feedback">
                                                                                 <div *ngIf="response_type.errors.required">A response type is required</div>
