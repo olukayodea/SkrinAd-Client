@@ -39,6 +39,7 @@ export class SurveyData {
     finance: Finance;
     getPersonalData: boolean;
     multipleAnswers: boolean;
+    randomOrder: boolean;
     statistics: SurveyStatistics;
     qustions: Question;
     created: string;

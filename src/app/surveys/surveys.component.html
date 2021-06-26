@@ -168,6 +168,17 @@
                                                     <div *ngIf="multiple.errors.required">Do you want a single user take the survey multiple times?</div>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="random_order">Questionaire Order</label>
+                                                <select required [ngClass]="(random_order.invalid && (random_order.dirty || random_order.touched)) ? 'form-control is-invalid' : (random_order.valid)? 'form-control is-valid':'form-control'" formControlName="random_order" id="random_order">
+                                                    <option value="">Select One</option>
+                                                    <option value="0">Sequential</option>
+                                                    <option value="1">Random</option>
+                                                </select>
+                                                <div *ngIf="random_order.invalid && (random_order.dirty || random_order.touched)" class="invalid-feedback">
+                                                    <div *ngIf="random_order.errors.required">Questionaire order is required</div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <!-- /.card-body -->
 

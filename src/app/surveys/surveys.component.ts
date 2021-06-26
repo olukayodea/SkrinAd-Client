@@ -66,6 +66,7 @@ export class SurveysComponent implements OnInit {
     areas: ["", Validators.required],
     request_personal_data: ["", Validators.required],
     multiple: ["", Validators.required],
+    random_order: ["", Validators.required]
 
   }, {});
   
@@ -82,6 +83,7 @@ export class SurveysComponent implements OnInit {
   get areas() { return this.dataForm.get('areas'); }
   get request_personal_data() { return this.dataForm.get('request_personal_data'); }
   get multiple() { return this.dataForm.get('multiple'); }
+  get random_order() { return this.dataForm.get("random_order") }
 
   constructor(
     private fb: FormBuilder,
@@ -186,7 +188,8 @@ export class SurveysComponent implements OnInit {
       country: this.userData.country.iso,
       areas: this.dataForm.value.areas,
       request_personal_data: this.dataForm.value.request_personal_data,
-      multiple: this.dataForm.value.multiple
+      multiple: this.dataForm.value.multiple,
+      random_order: this.dataForm.value.random_order
     };
 
     if (this.edit === true) {
@@ -265,7 +268,8 @@ export class SurveysComponent implements OnInit {
       country: data.country,
       areas: data.areas,
       request_personal_data: data.getPersonalData,
-      multiple: data.multipleAnswers
+      multiple: data.multipleAnswers,
+      random_order: data.randomOrder
     });
 
     this.dataForm.get('advert').disable();

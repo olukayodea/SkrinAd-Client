@@ -96,6 +96,9 @@
                                                 <b>Multiple Response</b> <a class="float-right" [innerHTML]="surveyData.multipleAnswers ? 'Yes':'No'"></a>
                                             </li>
                                             <li class="list-group-item">
+                                                <b>Questionaire Order</b> <a class="float-right" [innerHTML]="surveyData.randomOrder ? 'Sequential':'Random'"></a>
+                                            </li>
+                                            <li class="list-group-item">
                                                 <b>Status</b> <a class="float-right">
                                                     <span [class]="
                                                     surveyData.status.new === true ? 'badge bg-primary' : 
