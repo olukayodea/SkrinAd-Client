@@ -57,6 +57,7 @@ export class SurveysComponent implements OnInit {
     title: ["", Validators.required],
     advert: ["", Validators.required],
     caption: ["", Validators.required],
+    description: ["", [Validators.required, Validators.maxLength(500)]],
     impression: ["", Validators.required],
     budget: ["", Validators.required],
     category: ["", Validators.required],
@@ -74,6 +75,7 @@ export class SurveysComponent implements OnInit {
   get title() { return this.dataForm.get('title'); }
   get advert() { return this.dataForm.get('advert'); }
   get caption() { return this.dataForm.get('caption'); }
+  get description() { return this.dataForm.get('description'); }
   get impression() { return this.dataForm.get('impression'); } // get min impression
   get budget() { return this.dataForm.get('budget'); }
   get category() { return this.dataForm.get('category'); }
@@ -178,6 +180,7 @@ export class SurveysComponent implements OnInit {
     var data: object = {
       title: this.dataForm.value.title,
       caption: this.dataForm.value.caption,
+      description: this.dataForm.value.description,
       advert: this.dataForm.value.advert,
       impression: this.dataForm.value.impression,
       budget: this.total,
@@ -259,6 +262,7 @@ export class SurveysComponent implements OnInit {
       advert: advert,
       title: data.title,
       caption: data.caption,
+      description: data.description,
       impression: data.impression.issued,
       budget: data.impression.budget.amount,
       category: category,

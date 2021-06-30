@@ -40,6 +40,7 @@
                                     <div class="card-body box-profile">
                                         <h3 class="profile-username text-center">{{surveyData.title}}</h3>
                                         <p class="text-muted text-center">{{surveyData.caption}}</p>
+                                        <p class="text-center">{{surveyData.description}}</p>
                                         <div class="alert alert-warning" role="alert" *ngIf="surveyData.status.new === true && (surveyData.qustions.data.length == 0)">
                                             Go to the Questionaire setup tab, add questions to this survey to continue
                                         </div>

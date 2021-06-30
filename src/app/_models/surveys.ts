@@ -24,10 +24,12 @@ export class SurveyData {
     code: string;
     title: string;
     caption: string;
+    description: string;
     impression: Impressions;
     category: CategoryData[] = [];
     type: string;
     url: string;
+    logo: string;
     areas: string[] = [];
     avail_date: string[] = [];
     age: string[] = [];
@@ -83,6 +85,7 @@ export class StatBudget {
 
 export class Question {
     count: number;
+    time: string;
     data: QuestionData[] = [];
 }
 

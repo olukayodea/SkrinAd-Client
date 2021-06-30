@@ -56,6 +56,15 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label for="description">Description<em>*</em></label>
+                                                <textarea required [ngClass]="(description.invalid && (description.dirty || description.touched)) ? 'form-control is-invalid' : (description.valid)? 'form-control is-valid':'form-control'" formControlName="description" id="description" placeholder="Description">
+                                                </textarea>
+                                                <div *ngIf="description.invalid && (description.dirty || description.touched)" class="invalid-feedback">
+                                                    <div *ngIf="description.errors.required">Description is required</div>
+                                                    <div *ngIf="description.errors.maxLength">Max lenght of 500 characters exceeded</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="advert">Link Advert</label>
                                                 <select required [ngClass]="(advert.invalid && (advert.dirty || advert.touched)) ? 'form-control is-invalid' : (advert.valid)? 'form-control is-valid':'form-control'" formControlName="advert" id="advert">
                                                     <option value="">Select One</option>
@@ -151,7 +160,7 @@
                                                     <option value="1">Yes</option>
                                                 </select>
                                                 <div *ngIf="request_personal_data.invalid && (request_personal_data.dirty || request_personal_data.touched)" class="invalid-feedback">
-                                                    <div *ngIf="request_personal_data.errors.required">Prefered Location is required</div>
+                                                    <div *ngIf="request_personal_data.errors.required">Do you want to collect the respondent's personal data saved on SkrinAd?</div>
                                                 </div>
                                                 <div class="alert alert-warning" role="alert" *ngIf="personalData">
                                                     <span [innerHTML]="personalDataMsg" ></span>
