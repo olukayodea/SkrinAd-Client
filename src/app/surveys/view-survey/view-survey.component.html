@@ -325,8 +325,8 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr *ngFor="let surveyRow of surveyData.qustions.data;">
-                                                                    <td>{{surveyRow.title}}</td>
-                                                                    <td><span [innerHTML]="surveyRow.response_type == 'text'? 'Text' : surveyRow.response_type == 'texsingle_selectiont'? 'Single Selection' : surveyRow.response_type == 'multi_selection'? 'Multiple Selection' : 'Scaling Questions (1 - 5)'"></span> </td>
+                                                                    <td>{{surveyRow.title}}<span *ngIf="surveyRow.response" style="color: red;">*</span></td>
+                                                                    <td><span [innerHTML]="surveyRow.response_type == 'text'? 'Single Line' : surveyRow.response_type == 'text_area'? 'Multiple Lines' : surveyRow.response_type == 'texsingle_selectiont'? 'Single Selection' : surveyRow.response_type == 'multi_selection'? 'Multiple Selection' : 'Scaling Questions (1 - 5)'"></span> </td>
                                                                     <td>{{surveyRow.minimumSelection}}</td>
                                                                     <td><span [innerHTML]="surveyRow.allowManualInput === true ? 'Yes' : 'No'"></span> </td>
                                                                     <td><i class="fas fa-trash-alt"></i></td>
@@ -367,10 +367,22 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
+                                                                            <label for="response">Compulsory Response<em>*</em></label>
+                                                                            <select required [ngClass]="(response.invalid && (response.dirty || response.touched)) ? 'form-control is-invalid' : (response.valid)? 'form-control is-valid':'form-control'" formControlName="response" id="response">
+                                                                                <option value="">Select One</option>
+                                                                                <option value="1">Yes</option>
+                                                                                <option value="0">No</option>
+                                                                            </select>
+                                                                            <div *ngIf="response.invalid && (response.dirty || response.touched)" class="invalid-feedback">
+                                                                                <div *ngIf="response.errors.required">Compulsory Response selection is required</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
                                                                             <label for="response_type">Response Type</label>
                                                                             <select required [ngClass]="(response_type.invalid && (response_type.dirty || response_type.touched)) ? 'form-control is-invalid' : (response_type.valid)? 'form-control is-valid':'form-control'" formControlName="response_type" id="response_type" (change)="responseTypeSelector()">
                                                                                 <option value="">Select One</option>
-                                                                                <option value="text">Text</option>
+                                                                                <option value="text">Single Line</option>
+                                                                                <option value="text_area">Multiple Lines</option>
                                                                                 <option value="single_selection">Single Selection</option>
                                                                                 <option value="multi_selection">Multi Selection</option>
                                                                                 <option value="scaling">Scaling Questions (1 - 5)</option>

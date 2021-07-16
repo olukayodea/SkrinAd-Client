@@ -92,6 +92,7 @@ export class Question {
 export class QuestionData {
     ref: number;
     title: string;
+    response: boolean;
     response_type: string;
     responseData: string[] = [];
     minimumSelection: number;

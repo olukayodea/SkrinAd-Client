@@ -54,6 +54,7 @@ export class ViewSurveyComponent implements OnInit {
 
   dataForm = this.fb.group({
     title: ["", Validators.required],
+    response: ["", Validators.required],
     response_type: ["", Validators.required],
     response_data: this.fb.array([], [Validators.required]),
     min_selection: [{value: 1, disabled: true}, Validators.required],
@@ -62,6 +63,7 @@ export class ViewSurveyComponent implements OnInit {
     data_label: [{value: "", disabled: true}],
   }, {});
   get title() { return this.dataForm.get('title'); }
+  get response() { return this.dataForm.get('response'); }
   get response_type() { return this.dataForm.get('response_type'); }
   get response_data() { return this.dataForm.get('response_data') as FormArray; }
   get min_selection() { return this.dataForm.get('min_selection'); }
@@ -218,6 +220,7 @@ export class ViewSurveyComponent implements OnInit {
     var data: object = {
       survey: this.surveyRef,
       title: this.dataForm.value.title,
+      response: this.dataForm.value.response,
       response_type: this.dataForm.value.response_type,
       response_data: response_data,
       min_selection: this.dataForm.value.min_selection,
