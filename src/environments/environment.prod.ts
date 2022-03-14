@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://api.skrinad.me/2.2/',
+  baseUrl: 'https://api2.skrinad.me/2.2/',
   assetsUrl: "https://clients.skrinad.me/assets/",
   localKey: 'IYOTX3fNxSyOMcrp',
   paymentLocaton: ["ng"],
