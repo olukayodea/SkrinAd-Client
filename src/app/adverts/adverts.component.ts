@@ -30,11 +30,16 @@ export class AdvertsComponent implements OnInit {
 
   processing: boolean = false;
   loading: boolean = true;
+  submit: boolean = true;
+  showQuestion: boolean = false;
   buttonText: string = "Add New Advert";
 
   advertList: AdvertsData[] = [];
   categoryList: CategoryData[] = [];
   areaList: AreasData[] = [];
+
+  currentDate: string = "";
+  endDate: string = "";
 
   edit: boolean = false;
 
@@ -43,14 +48,16 @@ export class AdvertsComponent implements OnInit {
   advertRef:number = 0;
   advertName:string = "";
 
+  surveyQuestions:string[] = [];
+
   dataForm = this.fb.group({
     ref: [""],
     title: ["", Validators.required],
     caption: ["", Validators.required],
     type: ["", Validators.required],
     impression: ["", Validators.required],
-    run_time: ["", Validators.required],
-    daily_cap: [0, Validators.required],
+    start_date: ["", Validators.required],
+    end_date: ["", Validators.required],
     category: ["", Validators.required],
     url: ["", [Validators.required, Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?')]],
     avail_date: ["", Validators.required],
@@ -61,6 +68,12 @@ export class AdvertsComponent implements OnInit {
     // lat: ["", Validators.required],
     // long: ["", Validators.required],
     areas: ["", Validators.required],
+    survey: ['', Validators.required],
+    question: [""]
+  }, {});
+
+  questionForm = this.fb.group({
+    questionaire: ["", Validators.required]
   }, {});
   
   get ref() { return this.dataForm.get('ref'); }
@@ -68,8 +81,8 @@ export class AdvertsComponent implements OnInit {
   get caption() { return this.dataForm.get('caption'); }
   get type() { return this.dataForm.get('type'); }
   get impression() { return this.dataForm.get('impression'); } // get min impression
-  get run_time() { return this.dataForm.get('run_time'); }
-  get daily_cap() { return this.dataForm.get('daily_cap'); }
+  get start_date() { return this.dataForm.get('start_date'); }
+  get end_date() { return this.dataForm.get('end_date'); }
   get category() { return this.dataForm.get('category'); }
   get url() { return this.dataForm.get('url'); }
   get avail_date() { return this.dataForm.get('avail_date'); }
@@ -80,6 +93,10 @@ export class AdvertsComponent implements OnInit {
   // get lat() { return this.dataForm.get('lat'); }
   // get long() { return this.dataForm.get('long'); }
   get areas() { return this.dataForm.get('areas'); }
+  get survey() { return this.dataForm.get('survey'); }
+  get question() { return this.dataForm.get('question'); }
+
+  get questionaire() { return this.questionForm.get('questionaire'); }
 
   constructor(
     private fb: FormBuilder,
@@ -93,6 +110,8 @@ export class AdvertsComponent implements OnInit {
     this.checkService.checkSession();
     this.getRouteParams();
     this.getData();
+
+    this.currentDate = this.endDate = new Date().toISOString().slice(0, 10);
   }
 
   ngOnInit(): void {
@@ -153,8 +172,8 @@ export class AdvertsComponent implements OnInit {
       caption: this.dataForm.value.caption,
       type: this.dataForm.value.type,
       impression: this.dataForm.value.impression,
-      run_time: this.dataForm.value.run_time,
-      daily_cap: this.dataForm.value.daily_cap,
+      start_date: this.dataForm.value.start_date,
+      end_date: this.dataForm.value.end_date,
       category: this.dataForm.value.category,
       url: this.dataForm.value.url,
       avail_date: this.dataForm.value.avail_date,
@@ -165,7 +184,9 @@ export class AdvertsComponent implements OnInit {
       // lat: this.dataForm.value.lat,
       // long: this.dataForm.value.long,
       country: this.userData.country.iso,
-      areas: this.dataForm.value.areas
+      areas: this.dataForm.value.areas,
+      survey: this.dataForm.value.survey,
+      question: this.surveyQuestions
     };
 
     if (this.edit === true) {
@@ -229,8 +250,8 @@ export class AdvertsComponent implements OnInit {
       caption: data.caption,
       type: data.type,
       impression: data.impression.issued,
-      run_time: data.impression.runTime,
-      daily_cap: data.impression.dailyCap,
+      start_date: data.impression.runTime,
+      end_date: data.impression.dailyCap,
       category: category,
       url: data.url,
       avail_date: data.avail_date,
@@ -241,8 +262,10 @@ export class AdvertsComponent implements OnInit {
       // lat: data.lat,
       // long: data.long,
       country: data.country,
-      areas: data.areas
+      areas: data.areas,
+      survey: data.survey
     });
+    this.surveyQuestions = data.question;
     this.edit = true;
     this.formHeader = "Edit "+data.title;
     this.buttonText = "Edit Advert";
@@ -271,21 +294,8 @@ export class AdvertsComponent implements OnInit {
     });
   }
 
-  dailyCapCalculation() {
-    let cap:number = 0;
-    let impression:number = Number(this.dataForm.value.impression);
-    let run_time:number = Number(this.dataForm.value.run_time);
-    cap = Math.ceil(Number(impression/run_time));
-    this.daily_cap.setValidators([Validators.required, Validators.min(cap)]);
-    if (cap > 0) {
-      this.dataForm.patchValue({
-        daily_cap: cap
-      });
-      this.cap = cap;
-      
-    } else {
-      this.daily_cap.setValidators(null);
-    }
+  endTimeCalculator() {
+    this.endDate = this.dataForm.value.start_date;
   }
 
   changeAdvertStatus(action:string, ref:number) {
@@ -341,5 +351,29 @@ export class AdvertsComponent implements OnInit {
   getDataFromAdvert(name:string, ref:number) {
     this.advertName = name;
     this.advertRef = ref;
+  }
+
+  surveryChange() {
+    let survey:number = this.dataForm.value.survey;
+    if ( survey == 1 ) {
+      this.submit = false;
+      this.showQuestion = true;
+    } else {
+      this.submit = true;
+      this.showQuestion = false;
+    }
+  }
+
+  addQuestion() {
+    let questionaire:string = this.questionForm.value.questionaire;
+    this.surveyQuestions.push(questionaire);
+    if (this.surveyQuestions.length > 0) {
+      this.submit = true;
+    }
+    this.questionForm.reset();
+  }
+
+  removeQuestion( key ) {
+    this.surveyQuestions.splice(key, 1);
   }
 }

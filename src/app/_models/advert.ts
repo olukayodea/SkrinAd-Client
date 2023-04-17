@@ -30,6 +30,8 @@ export class AdvertsData {
     avail_date: string[] = [];
     age: string[] = [];
     gender: string[] = [];
+    survey: boolean;
+    question: string[] = [];
     status: AdvertStatus;
     payment_status: PaymentStatus;
     refund: string;
@@ -38,6 +40,9 @@ export class AdvertsData {
     subOwner: ClientsData;
     finance: AdvertFinance;
     statistics: AdvertStatistics;
+    daysRemaining: number;
+    startDate: string;
+    endDate: string;
     created: string;
     lastModified: string;
 

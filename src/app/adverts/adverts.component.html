@@ -57,34 +57,25 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="impression">Impressions<em>*</em></label>
-                                                <input type="number" required [ngClass]="(impression.invalid && (impression.dirty || impression.touched)) ? 'form-control is-invalid' : (impression.valid)? 'form-control is-valid':'form-control'" formControlName="impression" id="impression" placeholder="Impressions" (change)='dailyCapCalculation()' (keyup)='dailyCapCalculation()'>
+                                                <input type="number" required [ngClass]="(impression.invalid && (impression.dirty || impression.touched)) ? 'form-control is-invalid' : (impression.valid)? 'form-control is-valid':'form-control'" formControlName="impression" id="impression" placeholder="Impressions">
                                                 <div *ngIf="impression.invalid && (impression.dirty || impression.touched)" class="invalid-feedback">
                                                     <div *ngIf="impression.errors.required">Impressions is required</div>
                                                     <div *ngIf="impression.errors.min">Minimum Impression of {{min_imp}} not met</div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="run_time">Run Time<em>*</em></label>
-                                                <select [ngClass]="(run_time.invalid && (run_time.dirty || run_time.touched)) ? 'form-control is-invalid' : (run_time.valid)? 'form-control is-valid':'form-control'" formControlName="run_time" id="run_time" (change)='dailyCapCalculation()' (keyup)='dailyCapCalculation()'>
-                                                    <option value="">Select One</option>
-                                                    <option value="7">One Week</option>
-                                                    <option value="14">Two Weeks</option>
-                                                    <option value="21">Three Weeks</option>
-                                                    <option value="28">Four Weeks</option>
-                                                    <option value="60">Two Months</option>
-                                                    <option value="90">Three Months</option>
-                                                    <option value="1">Unlimited</option>
-                                                </select>
-                                                <div *ngIf="run_time.invalid && (run_time.dirty || run_time.touched)" class="invalid-feedback">
-                                                    <div *ngIf="run_time.errors.required">Run Time is required</div>
+                                                <label for="start_date">Start Time<em>*</em></label>
+                                                <input type="date" required [ngClass]="(start_date.invalid && (start_date.dirty || start_date.touched)) ? 'form-control is-invalid' : (start_date.valid)? 'form-control is-valid':'form-control'" formControlName="start_date" id="start_date" placeholder="Start Date" [min]="currentDate" (change)='endTimeCalculator()' (keyup)='endTimeCalculator()'>
+                                                <div *ngIf="start_date.invalid && (start_date.dirty || start_date.touched)" class="invalid-feedback">
+                                                    <div *ngIf="start_date.errors.required">Start Time is required</div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="daily_cap">Daily Cap<em>*</em></label>
-                                                <input type="number" required [ngClass]="(daily_cap.invalid && (daily_cap.dirty || daily_cap.touched)) ? 'form-control is-invalid' : (daily_cap.valid)? 'form-control is-valid':'form-control'" formControlName="daily_cap" id="daily_cap" placeholder="Daily Cap">
-                                                <div *ngIf="daily_cap.invalid && (daily_cap.dirty || daily_cap.touched)" class="invalid-feedback">
-                                                    <div *ngIf="daily_cap.errors.required">Daily Cap is required</div>
-                                                    <div *ngIf="daily_cap.errors.min">Daily Cap is less than the {{cap}}</div>
+                                                <label for="end_date">End Time <em>*</em></label>
+                                                <input type="date" required [ngClass]="(end_date.invalid && (end_date.dirty || end_date.touched)) ? 'form-control is-invalid' : (end_date.valid)? 'form-control is-valid':'form-control'" formControlName="end_date" id="end_date" placeholder="End Date" [min]="endDate">
+                                                <div *ngIf="end_date.invalid && (end_date.dirty || end_date.touched)" class="invalid-feedback">
+                                                    <div *ngIf="end_date.errors.required">End Time is required</div>
+                                                    <div *ngIf="end_date.errors.min">End Time is less than Start Time {{cap}}</div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -175,6 +166,23 @@
                                                     <div *ngIf="areas.errors.required">Prefered Location is required</div>
                                                 </div>
                                                 <small>if &quot;All&quot; is selected, all other selection is ignored</small>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="survey">Run Post Campaign Survey</label>
+                                                <select required [ngClass]="(survey.invalid && (survey.dirty || survey.touched)) ? 'form-control is-invalid' : (survey.valid)? 'form-control is-valid':'form-control'" formControlName="survey" id="survey" (change)="surveryChange()">
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                                <div *ngIf="survey.invalid && (survey.dirty || survey.touched)" class="invalid-feedback">
+                                                    <div *ngIf="survey.errors.required">Post Campaign Survey is required</div>
+                                                </div>
+                                                <small>Setup a maximum of 5 yes or No questions to evaluate your advert Campaign
+                                                     <span class="badge badge-success" *ngIf="showQuestion">{{surveyQuestions.length}} / 5 </span>
+                                                </small>
+                                            </div>
+                                            <div class="form-group" *ngIf="showQuestion">
+                                                <p><a href="#" data-toggle="modal" data-target="#modal-add-survey">Click here</a> to setup the questionaire</p>
                                             </div>
                                         </div>
                                         <!-- /.card-body -->
@@ -387,4 +395,40 @@
       </div>
       <!-- /.modal-dialog -->
  </div>
+<!-- /.modal -->
+<div class="modal fade" id="modal-add-survey">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Set Up Post-Advert Questionaire</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="questionForm">
+              <div class="input-group mb-3">
+                  <input type="text" formControlName="questionaire" placeholder="Questionaire" required [ngClass]="(questionaire.invalid && (questionaire.dirty || questionaire.touched)) ? 'form-control is-invalid' : (questionaire.valid)? 'form-control is-valid':'form-control'"  aria-label="Questionaire" aria-describedby="Questionaire">
+                  <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button" [disabled]="!questionForm.valid || surveyQuestions.length > 4" (click)="addQuestion()">Add</button>
+                  </div>
+
+                  <div *ngIf="questionaire.invalid && (questionaire.dirty || questionaire.touched)" class="invalid-feedback">
+                      <div *ngIf="questionaire.errors.required">Enter a question</div>
+                  </div>
+              </div>
+          </form>
+          <ul class="list-group">
+              <li class="list-group-item" *ngFor="let surveyQuestion of surveyQuestions; let i = index">
+                  <span class="badge badge-success">{{i + 1}}</span>&nbsp;&nbsp;{{surveyQuestion}}&nbsp;&nbsp;<span class="text-right"><a [routerLink]="" (click)="removeQuestion(i)">remove</a></span></li>
+          </ul>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <!-- /.modal -->

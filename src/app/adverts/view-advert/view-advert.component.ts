@@ -310,6 +310,11 @@ export class ViewAdvertComponent implements OnInit {
   
   getHostname = (url) => {
     if (url != undefined) {
+      if (url.indexOf("http://") == 0 || url.indexOf("https://") == 0) {
+        return new URL(url).hostname;
+      } else {
+        url = "http://" + url;
+      }
       return new URL(url).hostname;
     }
   }
